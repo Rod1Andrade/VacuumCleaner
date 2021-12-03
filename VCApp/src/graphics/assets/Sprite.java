@@ -14,8 +14,8 @@ public class Sprite {
     protected final int width;
     protected final int height;
 
-    protected int scaleFactor;
-    protected boolean isScale;
+    protected int scaleFactor = 1;
+    protected boolean isScaled;
 
     protected final Image sprite;
 
@@ -31,7 +31,7 @@ public class Sprite {
 
     public Image getSprite(int scale) {
         scaleFactor = scale;
-        isScale = true;
+        isScaled = true;
         return sprite.getScaledInstance(width * scale, height * scale, Image.SCALE_DEFAULT);
     }
 
@@ -40,15 +40,15 @@ public class Sprite {
     }
 
     public int getWidth() {
-        return width;
+        return width * scaleFactor;
     }
 
     public int getHeight() {
-        return height;
+        return height * scaleFactor;
     }
 
-    public boolean isScale() {
-        return isScale;
+    public boolean isScaled() {
+        return isScaled;
     }
 
     public int getScaleFactor() {

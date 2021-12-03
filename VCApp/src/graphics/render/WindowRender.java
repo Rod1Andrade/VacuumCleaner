@@ -3,11 +3,16 @@ package graphics.render;
 import app.Log;
 import graphics.assets.Sprite;
 import graphics.assets.SpriteSheet;
+import graphics.objects.Entity;
+import graphics.objects.Television;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Rodrigo Andrade
@@ -30,11 +35,12 @@ public class WindowRender extends Canvas implements Runnable {
     private BufferedImage bufferedImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 
     private static final SpriteSheet spriteSheet = new SpriteSheet("assets/vc-assets.png", 128, 80);
+
     public static final Sprite tvSprite = new Sprite(1, 48, 16, 16, spriteSheet);
     public static final Sprite lampSprite = new Sprite(82, 51, 13, 27, spriteSheet);
     public static final Sprite plantSprite = new Sprite(81, 1, 16, 20, spriteSheet);
 
-    private final Render render = new Render(WIDTH, HEIGHT);
+    private final RenderEngine renderEngine = new RenderEngine(WIDTH, HEIGHT);
 
     public WindowRender() {
         setMinimumSize(new Dimension(WIDTH, HEIGHT));
@@ -43,6 +49,7 @@ public class WindowRender extends Canvas implements Runnable {
     }
 
     public synchronized void initResources() throws IOException {
+        renderEngine.addEntityToRender(new Television(0,0, 16, 16, tvSprite));
     }
 
     /**
@@ -71,6 +78,7 @@ public class WindowRender extends Canvas implements Runnable {
      * de 60 updates por segundo para fazer acoes.
      */
     public void update() {
+        renderEngine.update(12.f);
     }
 
     /**
@@ -87,9 +95,8 @@ public class WindowRender extends Canvas implements Runnable {
         // Cria grafico a partir do buffer da imagem e desenha nela
         Graphics bufferedImageGraphics = bufferedImage.createGraphics();
 
-        bufferedImageGraphics.drawImage(tvSprite.getSprite(4), 50, 50, null);
-        bufferedImageGraphics.drawImage(lampSprite.getSprite(4), 200, 200, null);
-        bufferedImageGraphics.drawImage(plantSprite.getSprite(4), 200, 50, null);
+        renderEngine.clear(bufferedImageGraphics);
+        renderEngine.render(bufferedImageGraphics);
 
         // Cria um grafico a partir do buffer strategy (prove o page flip)
         Graphics bufferStrategyDrawGraphics = bufferStrategy.getDrawGraphics();
