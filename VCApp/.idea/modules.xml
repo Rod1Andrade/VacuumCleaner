@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/VCApp.iml" filepath="$PROJECT_DIR$/VCApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/VCapp.iml" filepath="$PROJECT_DIR$/VCapp.iml" />
     </modules>
   </component>
 </project>
