@@ -7,6 +7,9 @@ import graphics.objects.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * @author Rodrigo Andrade
@@ -29,6 +32,8 @@ public final class WindowRender extends Canvas implements Runnable {
     private final BufferedImage bufferedImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
     private final RenderEngine renderEngine = new RenderEngine(WIDTH, HEIGHT);
 
+    HashMap<String, Entity> entities = new HashMap<>();
+
     public WindowRender() {
         setMinimumSize(new Dimension(WIDTH, HEIGHT));
         setMaximumSize(new Dimension(WIDTH, HEIGHT));
@@ -39,6 +44,9 @@ public final class WindowRender extends Canvas implements Runnable {
      * Inicia recursos.
      */
     public synchronized void initResources()  {
+
+        entities.put("table", new Table(88, getHeight() / 2, 30, 22));
+        entities.put("vacuumCleaner", new VacuumCleaner(getWidth() / 2, getHeight() / 2, 16, 16, new ArrayList<Entity>(entities.values())));
 
         // Renderizando as paredes
         for (int x = 0; x < getWidth(); x += 64) {
@@ -69,8 +77,10 @@ public final class WindowRender extends Canvas implements Runnable {
         renderEngine.addEntityToRender(new LeftChair(88 - 36, getHeight() / 2, 14, 19));
         renderEngine.addEntityToRender(new RightChair(88 + 105, getHeight() / 2, 14, 19));
         renderEngine.addEntityToRender(new BackChair(88 + 30, getHeight() / 2 - 52, 14, 19));
-        renderEngine.addEntityToRender(new Table(88, getHeight() / 2, 30, 22));
+        renderEngine.addEntityToRender(entities.get("table"));
         renderEngine.addEntityToRender(new FrontChair(88 + 30, getHeight() / 2 + 66, 14, 19));
+
+        renderEngine.addEntityToRender(entities.get("vacuumCleaner"));
 
         addNotify();
     }

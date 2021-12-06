@@ -47,4 +47,9 @@ public abstract class Entity {
     public boolean isCollisible() {
         return boxCollision != null;
     }
+
+    @Override
+    public String toString() {
+        return "0";
+    }
 }
