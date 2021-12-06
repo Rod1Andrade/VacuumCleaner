@@ -6,11 +6,14 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RenderEngine {
+/**
+ * @author Rodrigo Andraade
+ */
+public final class RenderEngine {
 
-    protected final List<Entity> entities = new ArrayList<>();
-    protected final int width;
-    protected final int height;
+    private final List<Entity> entities = new ArrayList<>();
+    private final int width;
+    private final int height;
 
     public RenderEngine(int width, int height) {
         this.width = width;
