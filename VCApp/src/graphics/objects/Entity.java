@@ -10,6 +10,8 @@ import java.awt.*;
  */
 public abstract class Entity {
 
+    protected static final byte SCALE_FACTOR = 4;
+
     protected int posX;
     protected int posY;
 
@@ -23,13 +25,14 @@ public abstract class Entity {
     public Entity(int posX, int posY, int width, int height, Sprite sprite) {
         this.posX = posX;
         this.posY = posY;
-        this.width = width;
-        this.height = height;
+        this.width = width * SCALE_FACTOR;
+        this.height = height * SCALE_FACTOR;
         this.sprite = sprite;
     }
 
     public abstract void update(float deltaTime);
 
-    public abstract void render(Graphics graphics);
-
+    public void render(Graphics graphics) {
+        graphics.drawImage(sprite.getSprite(SCALE_FACTOR), posX, posY, null);
+    }
 }

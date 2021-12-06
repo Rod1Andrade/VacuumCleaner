@@ -1,24 +1,21 @@
 package graphics.objects;
 
 import graphics.assets.Sprite;
+import graphics.util.Loader;
 
-import java.awt.*;
+/**
+ * @author Rodrigo Andrade
+ */
+public final class Television extends Entity {
 
-public class Television extends Entity {
+    private static final Sprite tvSprite = new Sprite(1, 48, 16, 16, Loader.spriteSheet);
 
-    public Television() {
-    }
-
-    public Television(int posX, int posY, int width, int height, Sprite sprite) {
-        super(posX, posY, width, height, sprite);
+    public Television(int posX, int posY, int width, int height) {
+        super(posX, posY, width, height, tvSprite);
     }
 
     @Override
     public void update(float deltaTime) {
     }
 
-    @Override
-    public void render(Graphics graphics) {
-        graphics.drawImage(sprite.getSprite(4), posX, posY, null);
-    }
 }

@@ -6,7 +6,7 @@ import graphics.window.Window;
 import java.io.IOException;
 
 public class App {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
         WindowRender windowRender = new WindowRender();
         Window window = new Window(windowRender, "Vacuum Cleaner");

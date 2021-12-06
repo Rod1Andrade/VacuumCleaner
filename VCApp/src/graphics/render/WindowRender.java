@@ -3,16 +3,12 @@ package graphics.render;
 import app.Log;
 import graphics.assets.Sprite;
 import graphics.assets.SpriteSheet;
-import graphics.objects.Entity;
-import graphics.objects.Television;
+import graphics.objects.*;
+import graphics.objects.Window;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Rodrigo Andrade
@@ -25,20 +21,14 @@ public class WindowRender extends Canvas implements Runnable {
     private final static int BUFFER_STRATEGY = 2;
 
     // Informacoes de tamanho da tela de renderizacao
-    public static final int ASPECT_RATIO = 16 / 9;
+    public static final int ASPECT_RATIO = 4 / 3;
     public static final int WIDTH = 750;
     public static final int HEIGHT = WIDTH * ASPECT_RATIO;
 
     private boolean isRunning;
     private Thread windowRenderThread;
 
-    private BufferedImage bufferedImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-
-    private static final SpriteSheet spriteSheet = new SpriteSheet("assets/vc-assets.png", 128, 80);
-
-    public static final Sprite tvSprite = new Sprite(1, 48, 16, 16, spriteSheet);
-    public static final Sprite lampSprite = new Sprite(82, 51, 13, 27, spriteSheet);
-    public static final Sprite plantSprite = new Sprite(81, 1, 16, 20, spriteSheet);
+    private final BufferedImage bufferedImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 
     private final RenderEngine renderEngine = new RenderEngine(WIDTH, HEIGHT);
 
@@ -48,8 +38,41 @@ public class WindowRender extends Canvas implements Runnable {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
     }
 
-    public synchronized void initResources() throws IOException {
-        renderEngine.addEntityToRender(new Television(0,0, 16, 16, tvSprite));
+    public synchronized void initResources()  {
+
+        // Renderizando as paredes
+        for (int x = 0; x < getWidth(); x += 64) {
+            renderEngine.addEntityToRender(new StripedWall(x, 0, 16, 32));
+        }
+
+        // Renderizando o chao
+        for (int y = 128; y < getHeight(); y += 64) {
+            for (int x = 0; x < getWidth(); x += 64) {
+                renderEngine.addEntityToRender(new Floor(x, y, 16, 16));
+            }
+        }
+
+        // Objetos
+        renderEngine.addEntityToRender(new Window(48, (64 - 16) / 2, 14, 14));
+
+        renderEngine.addEntityToRender(new Mat(getWidth() / 2, getHeight() / 2, 48, 32));
+        renderEngine.addEntityToRender(new OilPaint((getWidth() / 2) - 16, (64 - 16) / 2, 16, 16));
+
+        renderEngine.addEntityToRender(new MiniTable(32, (128 + 32), 16, 16));
+        renderEngine.addEntityToRender(new Television(32, 128, 16, 16));
+
+        renderEngine.addEntityToRender(new Lamp(getWidth() - 64, 128 - 80, 13, 27));
+        renderEngine.addEntityToRender(new Shelf((getWidth() / 2) + 64, 128 - 80, 16, 27));
+
+        renderEngine.addEntityToRender(new Plant(getWidth() / 2 + 130, 128 - 60, 16, 20));
+
+        renderEngine.addEntityToRender(new LeftChair(88 - 36, getHeight() / 2, 14, 19));
+        renderEngine.addEntityToRender(new RightChair(88 + 105, getHeight() / 2, 14, 19));
+        renderEngine.addEntityToRender(new BackChair(88 + 30, getHeight() / 2 - 52, 14, 19));
+        renderEngine.addEntityToRender(new Table(88, getHeight() / 2, 30, 22));
+        renderEngine.addEntityToRender(new FrontChair(88 + 30, getHeight() / 2 + 66, 14, 19));
+
+        addNotify();
     }
 
     /**
@@ -66,7 +89,6 @@ public class WindowRender extends Canvas implements Runnable {
     /**
      * Coloca o loop em false e finaliza a thread de renderizacao.
      *
-     * @throws InterruptedException
      */
     public synchronized void stop() throws InterruptedException {
         isRunning = false;
@@ -101,8 +123,11 @@ public class WindowRender extends Canvas implements Runnable {
         // Cria um grafico a partir do buffer strategy (prove o page flip)
         Graphics bufferStrategyDrawGraphics = bufferStrategy.getDrawGraphics();
 
+
         // Desenha a imagem no grafico do buffer strategy
-        bufferStrategyDrawGraphics.drawImage(bufferedImage, 0, 0, null);
+        // TODO: Ideia de zooom in e zoom out: Camera seguir o aspirador de po
+//        bufferStrategyDrawGraphics.drawImage(bufferedImage.getScaledInstance(WIDTH * 2, HEIGHT * 2, BufferedImage.SCALE_DEFAULT), (getWidth() / 2) * - 1, (getHeight() / 2) * -1, null);
+        bufferStrategyDrawGraphics.drawImage(bufferedImage, 0,0, null);
 
         bufferedImageGraphics.dispose();
         do {
