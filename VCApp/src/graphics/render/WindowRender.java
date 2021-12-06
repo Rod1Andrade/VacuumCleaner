@@ -1,10 +1,8 @@
 package graphics.render;
 
 import app.Log;
-import graphics.assets.Sprite;
-import graphics.assets.SpriteSheet;
-import graphics.objects.*;
 import graphics.objects.Window;
+import graphics.objects.*;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -13,7 +11,7 @@ import java.awt.image.BufferedImage;
 /**
  * @author Rodrigo Andrade
  */
-public class WindowRender extends Canvas implements Runnable {
+public final class WindowRender extends Canvas implements Runnable {
 
     // Constantes de configuracao
     private final static double NS_PER_60_UPS = 1_000_000_000.0 / 60.0;
@@ -29,7 +27,6 @@ public class WindowRender extends Canvas implements Runnable {
     private Thread windowRenderThread;
 
     private final BufferedImage bufferedImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-
     private final RenderEngine renderEngine = new RenderEngine(WIDTH, HEIGHT);
 
     public WindowRender() {
@@ -38,6 +35,9 @@ public class WindowRender extends Canvas implements Runnable {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
     }
 
+    /**
+     * Inicia recursos.
+     */
     public synchronized void initResources()  {
 
         // Renderizando as paredes

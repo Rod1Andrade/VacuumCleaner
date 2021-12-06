@@ -16,6 +16,7 @@ public class Window extends JFrame {
 
         pack();
 
+        setFocusable(true);
         setVisible(true);
         setLocationRelativeTo(null);
     }
