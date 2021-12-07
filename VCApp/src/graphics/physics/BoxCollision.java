@@ -33,14 +33,9 @@ public class BoxCollision {
      * @return TRUE caso tenha colisao e FALSE caso contrario.
      */
     public boolean hasCollision(BoxCollision boxCollision) {
-        // Colisao do lado esquerdo com o lado direito
-        if((this.x == boxCollision.x + boxCollision.width) && this.y >= boxCollision.y && this.y + this.height <= boxCollision.y + boxCollision.height) {
-            System.out.println("Colidiu o lado esquerdo com o lado direito do objeto.");
-            return true;
-        }
-//        if((this.x + this.width >= boxCollision.x) && this.y <= boxCollision.y + boxCollision.height && this.y + this.height >= boxCollision.y)
-//            System.out.println("Colidiu o lado direito com o lado esquerdo do objeto.");
-        return false;
+        Rectangle r1 = new Rectangle(this.x, this.y, this.width, this.height);
+        Rectangle r2 = new Rectangle(boxCollision.x, boxCollision.y, boxCollision.width, boxCollision.height);
+        return r1.intersects(r2);
     }
 
     public void setValues(int x, int y) {

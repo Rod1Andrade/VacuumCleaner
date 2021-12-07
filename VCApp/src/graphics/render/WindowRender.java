@@ -33,12 +33,16 @@ public final class WindowRender extends Canvas implements Runnable {
     private final BufferedImage bufferedImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
     private final RenderEngine renderEngine = new RenderEngine(WIDTH, HEIGHT);
 
-    HashMap<String, Entity> entities = new HashMap<>();
+//    HashMap<String, Entity> entities = new HashMap<>();
+    Entity[] entities = new Entity[5];
 
     public WindowRender() {
         setMinimumSize(new Dimension(WIDTH, HEIGHT));
         setMaximumSize(new Dimension(WIDTH, HEIGHT));
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
+
+        System.out.println("WIDTH: " + WIDTH);
+        System.out.println("HEIGHT: " + HEIGHT);
     }
 
     /**
@@ -46,8 +50,10 @@ public final class WindowRender extends Canvas implements Runnable {
      */
     public synchronized void initResources() {
 
-        entities.put("table", new Table(88, getHeight() / 2, 30, 22));
-        entities.put("vacuumCleaner", new VacuumCleaner(getWidth() / 2, getHeight() / 2, 16, 16));
+        entities[0] = new Table(88, getHeight() / 2, 30, 22);
+        entities[1] = new VacuumCleaner(getWidth() / 2, getHeight() / 2, 16, 16);
+        entities[2] = new Lamp(getWidth() - 64, 128 - 80, 13, 27);
+        entities[3] = new Shelf((getWidth() / 2) + 64, 128 - 80, 16, 27);
 
         // Renderizando as paredes
         for (int x = 0; x < getWidth(); x += 64) {
@@ -70,24 +76,21 @@ public final class WindowRender extends Canvas implements Runnable {
         renderEngine.addEntityToRender(new MiniTable(32, (128 + 32), 16, 16));
         renderEngine.addEntityToRender(new Television(32, 128, 16, 16));
 
-        renderEngine.addEntityToRender(new Lamp(getWidth() - 64, 128 - 80, 13, 27));
-        renderEngine.addEntityToRender(new Shelf((getWidth() / 2) + 64, 128 - 80, 16, 27));
+        renderEngine.addEntityToRender(entities[2]);
+        renderEngine.addEntityToRender(entities[3]);
 
         renderEngine.addEntityToRender(new Plant(getWidth() / 2 + 130, 128 - 60, 16, 20));
 
 //        renderEngine.addEntityToRender(new LeftChair(88 - 36, getHeight() / 2, 14, 19));
 //        renderEngine.addEntityToRender(new RightChair(88 + 105, getHeight() / 2, 14, 19));
 //        renderEngine.addEntityToRender(new BackChair(88 + 30, getHeight() / 2 - 52, 14, 19));
-        renderEngine.addEntityToRender(entities.get("table"));
+        renderEngine.addEntityToRender(entities[0]);
 //        renderEngine.addEntityToRender(new FrontChair(88 + 30, getHeight() / 2 + 66, 14, 19));
 
-        renderEngine.addEntityToRender(entities.get("vacuumCleaner"));
+        renderEngine.addEntityToRender(entities[1]);
 
-        // TODO: Testing here...
-        Entity[] en = new ArrayList<>(entities.values()).toArray(new Entity[0]);
-        ((VacuumCleaner) entities.get("vacuumCleaner")).setEntities(en);
+        ((VacuumCleaner) entities[1]).setEntities(entities);
 
-        addNotify();
     }
 
     /**
@@ -110,11 +113,18 @@ public final class WindowRender extends Canvas implements Runnable {
     }
 
     /**
+     * Metodo de colisao.
+     */
+    public void colision() {
+        ((VacuumCleaner)entities[1]).collision();
+    }
+
+    /**
      * Metodo que vai ser chamado a uma taxa aproximada
      * de 60 updates por segundo para fazer acoes.
      */
-    public void update() {
-        entities.get("vacuumCleaner").update(1);
+    public void update(float deltaTime) {
+        entities[1].update(deltaTime);
     }
 
     /**
@@ -159,6 +169,7 @@ public final class WindowRender extends Canvas implements Runnable {
 
     @Override
     public void run() {
+
         long millisBeforeTime = System.currentTimeMillis();
         long nsBeforeTime = System.nanoTime();
 
@@ -175,13 +186,14 @@ public final class WindowRender extends Canvas implements Runnable {
             delta += difference / NS_PER_60_UPS;
 
             while (delta >= 1) {
-                update();
+                colision();
+                update((float) delta);
                 ups++;
                 delta--;
                 shouldRender = true;
             }
 
-            waitTime(2);
+            waitTime(5);
 
             if (shouldRender) {
                 render();
@@ -190,7 +202,7 @@ public final class WindowRender extends Canvas implements Runnable {
 
             if (System.currentTimeMillis() - millisBeforeTime > ONE_SECOND_IN_MILIS) {
                 millisBeforeTime += ONE_SECOND_IN_MILIS;
-//                Log.consoleLog("ups: " + ups + ", fps: " + fps);
+                Log.consoleLog("ups: " + ups + ", fps: " + fps);
                 ups = 0;
                 fps = 0;
             }

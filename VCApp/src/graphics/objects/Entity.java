@@ -36,7 +36,7 @@ public abstract class Entity {
         setBoxCollision(boxCollision);
     }
 
-    private void setBoxCollision(BoxCollision boxCollision) {
+    protected void setBoxCollision(BoxCollision boxCollision) {
         if (boxCollision != null) {
             boxCollision.setWidth(boxCollision.getWidth() * SCALE_FACTOR);
             boxCollision.setHeight(boxCollision.getHeight() * SCALE_FACTOR);
