@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Rodrigo Andrade
@@ -43,10 +44,10 @@ public final class WindowRender extends Canvas implements Runnable {
     /**
      * Inicia recursos.
      */
-    public synchronized void initResources()  {
+    public synchronized void initResources() {
 
         entities.put("table", new Table(88, getHeight() / 2, 30, 22));
-        entities.put("vacuumCleaner", new VacuumCleaner(getWidth() / 2, getHeight() / 2, 16, 16, new ArrayList<Entity>(entities.values())));
+        entities.put("vacuumCleaner", new VacuumCleaner(getWidth() / 2, getHeight() / 2, 16, 16));
 
         // Renderizando as paredes
         for (int x = 0; x < getWidth(); x += 64) {
@@ -74,13 +75,17 @@ public final class WindowRender extends Canvas implements Runnable {
 
         renderEngine.addEntityToRender(new Plant(getWidth() / 2 + 130, 128 - 60, 16, 20));
 
-        renderEngine.addEntityToRender(new LeftChair(88 - 36, getHeight() / 2, 14, 19));
-        renderEngine.addEntityToRender(new RightChair(88 + 105, getHeight() / 2, 14, 19));
-        renderEngine.addEntityToRender(new BackChair(88 + 30, getHeight() / 2 - 52, 14, 19));
+//        renderEngine.addEntityToRender(new LeftChair(88 - 36, getHeight() / 2, 14, 19));
+//        renderEngine.addEntityToRender(new RightChair(88 + 105, getHeight() / 2, 14, 19));
+//        renderEngine.addEntityToRender(new BackChair(88 + 30, getHeight() / 2 - 52, 14, 19));
         renderEngine.addEntityToRender(entities.get("table"));
-        renderEngine.addEntityToRender(new FrontChair(88 + 30, getHeight() / 2 + 66, 14, 19));
+//        renderEngine.addEntityToRender(new FrontChair(88 + 30, getHeight() / 2 + 66, 14, 19));
 
         renderEngine.addEntityToRender(entities.get("vacuumCleaner"));
+
+        // TODO: Testing here...
+        Entity[] en = new ArrayList<>(entities.values()).toArray(new Entity[0]);
+        ((VacuumCleaner) entities.get("vacuumCleaner")).setEntities(en);
 
         addNotify();
     }
@@ -98,7 +103,6 @@ public final class WindowRender extends Canvas implements Runnable {
 
     /**
      * Coloca o loop em false e finaliza a thread de renderizacao.
-     *
      */
     public synchronized void stop() throws InterruptedException {
         isRunning = false;
@@ -110,7 +114,7 @@ public final class WindowRender extends Canvas implements Runnable {
      * de 60 updates por segundo para fazer acoes.
      */
     public void update() {
-        renderEngine.update(12.f);
+        entities.get("vacuumCleaner").update(1);
     }
 
     /**
@@ -137,7 +141,7 @@ public final class WindowRender extends Canvas implements Runnable {
         // Desenha a imagem no grafico do buffer strategy
         // TODO: Ideia de zooom in e zoom out: Camera seguir o aspirador de po
 //        bufferStrategyDrawGraphics.drawImage(bufferedImage.getScaledInstance(WIDTH * 2, HEIGHT * 2, BufferedImage.SCALE_DEFAULT), (getWidth() / 2) * - 1, (getHeight() / 2) * -1, null);
-        bufferStrategyDrawGraphics.drawImage(bufferedImage, 0,0, null);
+        bufferStrategyDrawGraphics.drawImage(bufferedImage, 0, 0, null);
 
         bufferedImageGraphics.dispose();
         do {
@@ -186,7 +190,7 @@ public final class WindowRender extends Canvas implements Runnable {
 
             if (System.currentTimeMillis() - millisBeforeTime > ONE_SECOND_IN_MILIS) {
                 millisBeforeTime += ONE_SECOND_IN_MILIS;
-                Log.consoleLog("ups: " + ups + ", fps: " + fps);
+//                Log.consoleLog("ups: " + ups + ", fps: " + fps);
                 ups = 0;
                 fps = 0;
             }

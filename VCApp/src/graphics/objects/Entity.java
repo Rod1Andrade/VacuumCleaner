@@ -1,7 +1,9 @@
 package graphics.objects;
 
 import graphics.assets.Sprite;
+import graphics.enums.Mode;
 import graphics.physics.BoxCollision;
+import graphics.util.Info;
 
 import java.awt.*;
 
@@ -30,12 +32,40 @@ public abstract class Entity {
         this.width = width * SCALE_FACTOR;
         this.height = height * SCALE_FACTOR;
         this.sprite = sprite;
-        this.boxCollision = boxCollision;
+
+        setBoxCollision(boxCollision);
+    }
+
+    private void setBoxCollision(BoxCollision boxCollision) {
+        if (boxCollision != null) {
+            boxCollision.setWidth(boxCollision.getWidth() * SCALE_FACTOR);
+            boxCollision.setHeight(boxCollision.getHeight() * SCALE_FACTOR);
+            this.boxCollision = boxCollision;
+        }
     }
 
     public abstract void update(float deltaTime);
 
+    /**
+     * Renderizacao da entidade.
+     *
+     * @param graphics Graphics
+     */
     public void render(Graphics graphics) {
+        if (boxCollision != null && Info.mode == Mode.DEBUG) {
+            String position = "(" + boxCollision.getX() + ", " + boxCollision.getY() + ")";
+
+            graphics.setColor(Color.WHITE);
+            graphics.drawString(position, boxCollision.getX(), boxCollision.getY());
+
+            String size = "(" + boxCollision.getWidth() + ", " + boxCollision.getHeight() + ")";
+            graphics.setColor(Color.WHITE);
+            graphics.drawString(size, boxCollision.getX() + boxCollision.getWidth(), boxCollision.getY() + boxCollision.getHeight());
+
+            graphics.setColor(Color.GREEN);
+            graphics.drawRect(boxCollision.getX(), boxCollision.getY(), boxCollision.getWidth(), boxCollision.getHeight());
+        }
+
         graphics.drawImage(sprite.getSprite(SCALE_FACTOR), posX, posY, null);
     }
 

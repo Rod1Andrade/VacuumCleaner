@@ -35,7 +35,7 @@ public final class RenderEngine {
         }
     }
 
-    public void update(float deltaTime) {
+    public synchronized void update(float deltaTime) {
         for (Entity entity : entities) {
             entity.update(deltaTime);
         }
