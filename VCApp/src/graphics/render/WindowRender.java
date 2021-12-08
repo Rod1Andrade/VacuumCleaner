@@ -7,17 +7,17 @@ import graphics.objects.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+
 
 /**
  * @author Rodrigo Andrade
  */
 public final class WindowRender extends Canvas implements Runnable {
 
-    // Constantes de configuracao
+
+	private static final long serialVersionUID = 3060247783915240461L;
+	
+	// Constantes de configuracao
     private final static double NS_PER_60_UPS = 1_000_000_000.0 / 60.0;
     private final static int ONE_SECOND_IN_MILIS = 1000;
     private final static int BUFFER_STRATEGY = 2;
@@ -34,7 +34,7 @@ public final class WindowRender extends Canvas implements Runnable {
     private final RenderEngine renderEngine = new RenderEngine(WIDTH, HEIGHT);
 
 //    HashMap<String, Entity> entities = new HashMap<>();
-    Entity[] entities = new Entity[5];
+    Entity[] entities = new Entity[6];
 
     public WindowRender() {
         setMinimumSize(new Dimension(WIDTH, HEIGHT));
@@ -54,6 +54,8 @@ public final class WindowRender extends Canvas implements Runnable {
         entities[1] = new VacuumCleaner(getWidth() / 2, getHeight() / 2, 16, 16);
         entities[2] = new Lamp(getWidth() - 64, 128 - 80, 13, 27);
         entities[3] = new Shelf((getWidth() / 2) + 64, 128 - 80, 16, 27);
+        entities[4] = new MiniTable(32, (128 + 32), 16, 16);
+        entities[5] = new Television(32, 128, 16, 16);
 
         // Renderizando as paredes
         for (int x = 0; x < getWidth(); x += 64) {
@@ -73,8 +75,8 @@ public final class WindowRender extends Canvas implements Runnable {
         renderEngine.addEntityToRender(new Mat(getWidth() / 2, getHeight() / 2, 48, 32));
         renderEngine.addEntityToRender(new OilPaint((getWidth() / 2) - 16, (64 - 16) / 2, 16, 16));
 
-        renderEngine.addEntityToRender(new MiniTable(32, (128 + 32), 16, 16));
-        renderEngine.addEntityToRender(new Television(32, 128, 16, 16));
+        renderEngine.addEntityToRender(entities[4]);
+        renderEngine.addEntityToRender(entities[5]);
 
         renderEngine.addEntityToRender(entities[2]);
         renderEngine.addEntityToRender(entities[3]);

@@ -1,7 +1,6 @@
 package graphics.physics;
 
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
 
 /**
  * Caixa de colisao vai definir em uma entidade

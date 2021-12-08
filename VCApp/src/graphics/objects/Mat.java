@@ -1,7 +1,6 @@
 package graphics.objects;
 
 import graphics.assets.Sprite;
-import graphics.physics.BoxCollision;
 import graphics.util.Loader;
 
 /**

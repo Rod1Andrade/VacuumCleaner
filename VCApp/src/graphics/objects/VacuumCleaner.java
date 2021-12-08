@@ -14,194 +14,245 @@ import java.util.Random;
  * @author Rodrigo Andrade
  */
 public class VacuumCleaner extends Entity {
+	
+	// Constante de direcoes
+	protected static final int DIRECTION_LEFT = 0;
+	protected static final int DIRECTION_RIGHT = 1;
+	protected static final int DIRECTION_UPPER = 2;
+	protected static final int DIRECTION_DOWN = 3;
+	
+	// Fatores de modulo e direcao
+	private int xVelocity = 2;
+	private int yVelocity = 0;
+	private final int velocity = 2;
+	private int previousDirection = DIRECTION_LEFT;
+	private int actualDirection = DIRECTION_RIGHT;
+	
+	// Controle de colisao
+	private boolean hasCollision = false;
+	
+	// Variaveis de controle da atualizacao de movimentos com base no deltaTime.
+	int controllingTimeToChangeDirection = 0;
+	int controllingTimeToCollision = 0;
+	
+	// Sprites de cada direcao
+	private final Sprite[] sprites = { new Sprite(80, 48, 16, 16, Loader.spriteSheet001),
+			new Sprite(80, 32, 16, 16, Loader.spriteSheet001), new Sprite(96, 48, 16, 16, Loader.spriteSheet001),
+			new Sprite(96, 32, 16, 16, Loader.spriteSheet001), };
+	
+	// Entidades de colisao
+	private Entity[] entities;
+	
+	// Classe Random (gerar valores aleatorios)
+	private Random random = new Random();
 
-    protected static final int DIRECTION_LEFT = 0;
-    protected static final int DIRECTION_RIGHT = 1;
-    protected static final int DIRECTION_UPPER = 2;
-    protected static final int DIRECTION_DOWN = 3;
+	public VacuumCleaner(int posX, int posY, int width, int height) {
+		this.posX = posX;
+		this.posY = posY;
+		this.width = width * SCALE_FACTOR;
+		this.height = height * SCALE_FACTOR;
 
-    private int xVelocity = 2;
-    private int yVelocity = 0;
-    private final int velocity = 2;
-    private int previousDirection = DIRECTION_LEFT;
-    private int actualDirection = DIRECTION_RIGHT;
+		this.sprite = sprites[actualDirection];
 
-    private boolean hasCollision = false;
-    private int collisionDirection = previousDirection;
+		setBoxCollision(new BoxCollision(posX, posY, width, height));
+	}
 
-    private Entity[] entities;
-    private final Sprite[] sprites = {
-            new Sprite(80, 48, 16, 16, Loader.spriteSheet001),
-            new Sprite(80, 32, 16, 16, Loader.spriteSheet001),
-            new Sprite(96, 48, 16, 16, Loader.spriteSheet001),
-            new Sprite(96, 32, 16, 16, Loader.spriteSheet001),
-    };
+	/**
+	 * Este metodo deve ser chamado antes da chamada do metodo update.
+	 *
+	 * @param entities Entity[]
+	 */
+	public void setEntities(Entity[] entities) {
+		this.entities = entities;
+	}
 
-    private Random random = new Random();
+	public void collision() {
+		hasCollision = false;
+		for (int i = 0; i < entities.length; i++) {
+			if (entities[i] != null && !(entities[i] instanceof VacuumCleaner)
+					&& this.boxCollision.hasCollision(entities[i].boxCollision)) {
+				hasCollision = true;
+			}
+		}
 
-    public VacuumCleaner(int posX, int posY, int width, int height) {
-        this.posX = posX;
-        this.posY = posY;
-        this.width = width * SCALE_FACTOR;
-        this.height = height * SCALE_FACTOR;
+		if (posX + width >= WindowRender.WIDTH)
+			hasCollision = true;
+		if (posY + height >= WindowRender.HEIGHT)
+			hasCollision = true;
+		if (posX <= 0)
+			hasCollision = true;
+		if (posY <= 130)
+			hasCollision = true;
 
-        this.sprite = sprites[actualDirection];
+		if (hasCollision) {
+		}
+	}
+	
 
-        setBoxCollision(new BoxCollision(posX, posY, width, height));
-    }
+	@Override
+	public void update(float deltaTime) {
 
-    /**
-     * Recomendacao: Este metodo deve ser chamado antes da chamada do metodo update.
-     *
-     * @param entities Entity[]
-     */
-    public void setEntities(Entity[] entities) {
-        this.entities = entities;
-    }
+		makeMovement();
 
-    public void collision() {
-        hasCollision = false;
-        for (int i = 0; i < entities.length; i++) {
-            if (entities[i] != null && !(entities[i] instanceof VacuumCleaner) && this.boxCollision.hasCollision(entities[i].boxCollision)) {
-                hasCollision = true;
-            }
-        }
+		if (hasChangedDirection())
+			changeSpriteDirection();
 
-        if (posX + width >= WindowRender.WIDTH) hasCollision = true;
-        if(posY + height >= WindowRender.HEIGHT) hasCollision = true;
-        if(posX <= 0) hasCollision = true;
-        if(posY <= 130) hasCollision = true;
-    }
+		if (hasCollision && controllingTimeToCollision > 6) {
+			moveToOppositeDirection(actualDirection);
+			controllingTimeToCollision = 0;
+		}
 
-    int time = 0;
-    @Override
-    public void update(float deltaTime) {
-        makeMovement();
+		if (!hasCollision && controllingTimeToChangeDirection > 120.0) {
+			randomMovement();
+			controllingTimeToChangeDirection = 0;
+		}
 
-        if (hasChangedDirection())
-            changeSpriteDirection();
+		controllingTimeToChangeDirection += deltaTime;
+		controllingTimeToCollision += deltaTime;
+	}
 
-        if(hasCollision) {
-            moveToOppositeDirection(actualDirection);
-        }
-    }
+	private boolean hasChangedDirection() {
+		return previousDirection != actualDirection;
+	}
 
-    private boolean hasChangedDirection() {
-        return previousDirection != actualDirection;
-    }
+	private void changeSpriteDirection() {
+		this.sprite = this.sprites[actualDirection];
+	}
 
-    private void changeSpriteDirection() {
-        this.sprite = this.sprites[actualDirection];
-    }
+	private void moveToOppositeDirection(int actualDirection) {
+		synchronized (this) {
+			switch (actualDirection) {
+			case DIRECTION_LEFT:
+				moveToRight();
+				break;
+			case DIRECTION_RIGHT:
+				moveToLeft();
+				break;
+			case DIRECTION_UPPER:
+				moveToDown();
+				break;
+			case DIRECTION_DOWN:
+				moveToUpper();
+				break;
+			}
+		}
+	}
 
-    private void moveToOppositeDirection (int actualDirection) {
-       synchronized (this) {
-           switch (actualDirection) {
-               case DIRECTION_LEFT: moveToRight(); break;
-               case DIRECTION_RIGHT: moveToLeft(); break;
-               case DIRECTION_UPPER: moveToDown(); break;
-               case DIRECTION_DOWN: moveToUpper(); break;
-           }
-       }
-    }
+	public void randomMovement() {
 
-    public void randomMovement() {
-        synchronized (this) {
-            int randomMovement = random.nextInt(4);
+		int randomMovement = random.nextInt(4);
 
-            switch (randomMovement) {
-                case DIRECTION_LEFT:
-                    moveToLeft();
-                    break;
-                case DIRECTION_RIGHT:
-                    moveToRight();
-                    break;
-                case DIRECTION_UPPER:
-                    moveToUpper();
-                    break;
-                case DIRECTION_DOWN:
-                    moveToDown();
-                    break;
-            }
-        }
-    }
+		switch (randomMovement) {
+		case DIRECTION_LEFT:
+			moveToLeft();
+			break;
+		case DIRECTION_RIGHT:
+			moveToRight();
+			break;
+		case DIRECTION_UPPER:
+			moveToUpper();
+			break;
+		case DIRECTION_DOWN:
+			moveToDown();
+			break;
+		}
 
-    private void makeMovement() {
-        posY += yVelocity;
-        posX += xVelocity;
-        boxCollision.setValues(posX, posY);
-    }
+	}
 
-    private void moveToLeft() {
-        yVelocity = 0;
-        xVelocity = -velocity;
-        previousDirection = actualDirection;
-        actualDirection = DIRECTION_LEFT;
-    }
+	private void makeMovement() {
+		posY += yVelocity;
+		posX += xVelocity;
+		boxCollision.setValues(posX, posY);
+	}
 
-    private void moveToRight() {
-        yVelocity = 0;
-        xVelocity = velocity;
-        previousDirection = actualDirection;
-        actualDirection = DIRECTION_RIGHT;
-    }
+	private void moveToLeft() {
+		yVelocity = 0;
+		xVelocity = -velocity;
+		previousDirection = actualDirection;
+		actualDirection = DIRECTION_LEFT;
+	}
 
-    private void moveToUpper() {
-        yVelocity = -velocity;
-        xVelocity = 0;
-        previousDirection = actualDirection;
-        actualDirection = DIRECTION_UPPER;
-    }
+	private void moveToRight() {
+		yVelocity = 0;
+		xVelocity = velocity;
+		previousDirection = actualDirection;
+		actualDirection = DIRECTION_RIGHT;
+	}
 
-    private void moveToDown() {
-        yVelocity = velocity;
-        xVelocity = 0;
-        previousDirection = actualDirection;
-        actualDirection = DIRECTION_DOWN;
-    }
+	private void moveToUpper() {
+		yVelocity = -velocity;
+		xVelocity = 0;
+		previousDirection = actualDirection;
+		actualDirection = DIRECTION_UPPER;
+	}
 
-    @Override
-    public void render(Graphics graphics) {
+	private void moveToDown() {
+		yVelocity = velocity;
+		xVelocity = 0;
+		previousDirection = actualDirection;
+		actualDirection = DIRECTION_DOWN;
+	}
 
-        if (Info.mode == Mode.DEBUG) {
-            String prevDirection = "", actDirection = "";
-            switch (previousDirection) {
-                case DIRECTION_LEFT: prevDirection = "Left";break;
-                case DIRECTION_RIGHT: prevDirection = "Right";break;
-                case DIRECTION_UPPER: prevDirection = "Upper";break;
-                case DIRECTION_DOWN: prevDirection = "Down";break;
-            }
+	@Override
+	public void render(Graphics graphics) {
 
-            switch (actualDirection){
-                case DIRECTION_LEFT: actDirection = "Left";break;
-                case DIRECTION_RIGHT: actDirection = "Right";break;
-                case DIRECTION_UPPER: actDirection = "Upper";break;
-                case DIRECTION_DOWN: actDirection = "Down";break;
-            }
+		if (Info.mode == Mode.DEBUG) {
+			String prevDirection = "", actDirection = "";
+			switch (previousDirection) {
+			case DIRECTION_LEFT:
+				prevDirection = "Left";
+				break;
+			case DIRECTION_RIGHT:
+				prevDirection = "Right";
+				break;
+			case DIRECTION_UPPER:
+				prevDirection = "Upper";
+				break;
+			case DIRECTION_DOWN:
+				prevDirection = "Down";
+				break;
+			}
 
-            graphics.setColor(Color.WHITE);
-            graphics.setFont(new Font("Dialog", Font.PLAIN, 25));
-            graphics.drawString("Previous Direction: " + prevDirection, 10, 25);
-            graphics.drawString("Actual Direction: " + actDirection, 10, 55);
+			switch (actualDirection) {
+			case DIRECTION_LEFT:
+				actDirection = "Left";
+				break;
+			case DIRECTION_RIGHT:
+				actDirection = "Right";
+				break;
+			case DIRECTION_UPPER:
+				actDirection = "Upper";
+				break;
+			case DIRECTION_DOWN:
+				actDirection = "Down";
+				break;
+			}
 
-            graphics.setFont(new Font("Dialog", Font.PLAIN, 12));
-            String position = "(" + boxCollision.getX() + ", " + boxCollision.getY() + ")";
+			graphics.setColor(Color.WHITE);
+			graphics.setFont(new Font("Dialog", Font.PLAIN, 25));
+			graphics.drawString("Previous Direction: " + prevDirection, 10, 25);
+			graphics.drawString("Actual Direction: " + actDirection, 10, 55);
 
-            graphics.setColor(Color.WHITE);
-            graphics.drawString(position, boxCollision.getX(), boxCollision.getY());
+			graphics.setFont(new Font("Dialog", Font.PLAIN, 12));
+			String position = "(" + boxCollision.getX() + ", " + boxCollision.getY() + ")";
 
-            String size = "(" + boxCollision.getWidth() + ", " + boxCollision.getHeight() + ")";
-            graphics.setColor(Color.WHITE);
-            graphics.drawString(size, boxCollision.getX() + boxCollision.getWidth(), boxCollision.getY() + boxCollision.getHeight());
+			graphics.setColor(Color.WHITE);
+			graphics.drawString(position, boxCollision.getX(), boxCollision.getY());
 
-            if (hasCollision) {
-                graphics.setColor(Color.RED);
-            } else {
-                graphics.setColor(Color.GREEN);
-            }
+			String size = "(" + boxCollision.getWidth() + ", " + boxCollision.getHeight() + ")";
+			graphics.setColor(Color.WHITE);
+			graphics.drawString(size, boxCollision.getX() + boxCollision.getWidth(),
+					boxCollision.getY() + boxCollision.getHeight());
 
-            graphics.drawRect(boxCollision.getX(), boxCollision.getY(), boxCollision.getWidth(), boxCollision.getHeight());
-        }
-        graphics.drawImage(sprite.getSprite(SCALE_FACTOR), posX, posY, null);
-    }
+			if (hasCollision) {
+				graphics.setColor(Color.RED);
+			} else {
+				graphics.setColor(Color.GREEN);
+			}
+
+			graphics.drawRect(boxCollision.getX(), boxCollision.getY(), boxCollision.getWidth(),
+					boxCollision.getHeight());
+		}
+		graphics.drawImage(sprite.getSprite(SCALE_FACTOR), posX, posY, null);
+	}
 }

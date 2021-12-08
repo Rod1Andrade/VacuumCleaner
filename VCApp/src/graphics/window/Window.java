@@ -1,6 +1,7 @@
 package graphics.window;
 
 import javax.swing.*;
+
 import java.awt.*;
 
 /**
@@ -8,12 +9,14 @@ import java.awt.*;
  */
 public class Window extends JFrame {
 
-    public Window(Canvas canvas, String title) {
+	private static final long serialVersionUID = 3912653148780270523L;
+
+	public Window(Canvas canvas, String title) {
         super(title);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().add(canvas);
-        setResizable(false);
 
+        setResizable(false);
         pack();
 
         setFocusable(true);

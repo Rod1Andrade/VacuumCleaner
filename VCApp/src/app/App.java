@@ -9,7 +9,7 @@ public class App {
     public static void main(String[] args) throws IOException, InterruptedException {
 
         WindowRender windowRender = new WindowRender();
-        Window window = new Window(windowRender, "Vacuum Cleaner");
+        new Window(windowRender, "Vacuum Cleaner");
 
         windowRender.initResources();
         windowRender.start();
