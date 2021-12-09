@@ -1,8 +1,8 @@
 package graphics.window;
 
-import javax.swing.*;
+import java.awt.Canvas;
 
-import java.awt.*;
+import javax.swing.JFrame;
 
 /**
  * @author Rodrigo Andrade
@@ -23,5 +23,4 @@ public class Window extends JFrame {
         setVisible(true);
         setLocationRelativeTo(null);
     }
-
 }

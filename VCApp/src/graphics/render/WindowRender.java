@@ -1,12 +1,19 @@
 package graphics.render;
 
-import app.Log;
+import graphics.enums.Mode;
+import graphics.inputs.KeyInput;
+import graphics.inputs.KeyboardInput;
 import graphics.objects.Window;
 import graphics.objects.*;
+import graphics.ui.Hud;
+import graphics.util.Info;
 
-import java.awt.*;
+import java.awt.Canvas;
+import java.awt.Dimension;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.awt.Graphics;
 
 
 /**
@@ -14,10 +21,11 @@ import java.awt.image.BufferedImage;
  */
 public final class WindowRender extends Canvas implements Runnable {
 
+    private static final long serialVersionUID = 3060247783915240461L;
 
-	private static final long serialVersionUID = 3060247783915240461L;
-	
-	// Constantes de configuracao
+    private KeyInput keyInput;
+
+    // Constantes de configuracao
     private final static double NS_PER_60_UPS = 1_000_000_000.0 / 60.0;
     private final static int ONE_SECOND_IN_MILIS = 1000;
     private final static int BUFFER_STRATEGY = 2;
@@ -33,22 +41,23 @@ public final class WindowRender extends Canvas implements Runnable {
     private final BufferedImage bufferedImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
     private final RenderEngine renderEngine = new RenderEngine(WIDTH, HEIGHT);
 
-//    HashMap<String, Entity> entities = new HashMap<>();
-    Entity[] entities = new Entity[6];
+    private Hud hud = new Hud(0, HEIGHT - 130, WIDTH, 130);
+    private Entity[] entities = new Entity[6];
 
-    public WindowRender() {
+    public WindowRender(KeyInput keyInput) {
         setMinimumSize(new Dimension(WIDTH, HEIGHT));
         setMaximumSize(new Dimension(WIDTH, HEIGHT));
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        setFocusable(true);
 
-        System.out.println("WIDTH: " + WIDTH);
-        System.out.println("HEIGHT: " + HEIGHT);
+        this.keyInput = keyInput;
     }
 
     /**
      * Inicia recursos.
      */
     public synchronized void initResources() {
+        addKeyListener(keyInput);
 
         entities[0] = new Table(88, getHeight() / 2, 30, 22);
         entities[1] = new VacuumCleaner(getWidth() / 2, getHeight() / 2, 16, 16);
@@ -63,7 +72,7 @@ public final class WindowRender extends Canvas implements Runnable {
         }
 
         // Renderizando o chao
-        for (int y = 128; y < getHeight(); y += 64) {
+        for (int y = 128; y < getHeight()  - hud.getHeight(); y += 64) {
             for (int x = 0; x < getWidth(); x += 64) {
                 renderEngine.addEntityToRender(new Floor(x, y, 16, 16));
             }
@@ -91,6 +100,7 @@ public final class WindowRender extends Canvas implements Runnable {
 
         renderEngine.addEntityToRender(entities[1]);
 
+        hud.setHudVacuumCleanerInfo(((VacuumCleaner) entities[1]));
         ((VacuumCleaner) entities[1]).setEntities(entities);
 
     }
@@ -114,11 +124,21 @@ public final class WindowRender extends Canvas implements Runnable {
         windowRenderThread.join();
     }
 
+    public void userInputs() {
+        if (keyInput.hasPressed(KeyEvent.VK_D)) {
+            Info.mode = Mode.DEBUG;
+        }
+
+        if (keyInput.hasPressed(KeyEvent.VK_N)) {
+            Info.mode = Mode.DEV;
+        }
+    }
+
     /**
      * Metodo de colisao.
      */
-    public void colision() {
-        ((VacuumCleaner)entities[1]).collision();
+    public void collision() {
+        ((VacuumCleaner) entities[1]).collision();
     }
 
     /**
@@ -127,6 +147,7 @@ public final class WindowRender extends Canvas implements Runnable {
      */
     public void update(float deltaTime) {
         entities[1].update(deltaTime);
+        hud.update(deltaTime);
     }
 
     /**
@@ -145,6 +166,7 @@ public final class WindowRender extends Canvas implements Runnable {
 
         renderEngine.clear(bufferedImageGraphics);
         renderEngine.render(bufferedImageGraphics);
+        hud.render(bufferedImageGraphics);
 
         // Cria um grafico a partir do buffer strategy (prove o page flip)
         Graphics bufferStrategyDrawGraphics = bufferStrategy.getDrawGraphics();
@@ -187,8 +209,10 @@ public final class WindowRender extends Canvas implements Runnable {
             nsBeforeTime = nsNowTime;
             delta += difference / NS_PER_60_UPS;
 
+            userInputs();
+
             while (delta >= 1) {
-                colision();
+                collision();
                 update((float) delta);
                 ups++;
                 delta--;
@@ -202,12 +226,12 @@ public final class WindowRender extends Canvas implements Runnable {
                 fps++;
             }
 
-            if (System.currentTimeMillis() - millisBeforeTime > ONE_SECOND_IN_MILIS) {
-                millisBeforeTime += ONE_SECOND_IN_MILIS;
-                Log.consoleLog("ups: " + ups + ", fps: " + fps);
-                ups = 0;
-                fps = 0;
-            }
+//            if (System.currentTimeMillis() - millisBeforeTime > ONE_SECOND_IN_MILIS) {
+//                millisBeforeTime += ONE_SECOND_IN_MILIS;
+//                Log.consoleLog("ups: " + ups + ", fps: " + fps);
+//                ups = 0;
+//                fps = 0;
+//            }
         }
     }
 }

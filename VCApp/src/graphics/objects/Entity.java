@@ -12,7 +12,7 @@ import java.awt.*;
  */
 public abstract class Entity {
 
-    protected static final byte SCALE_FACTOR = 4;
+    protected static byte SCALE_FACTOR = 4;
 
     protected int posX;
     protected int posY;
