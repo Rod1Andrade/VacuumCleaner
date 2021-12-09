@@ -13,23 +13,25 @@ import java.awt.*;
  */
 public final class SimulationState extends State {
 
-    private Hud hud = new Hud(0, Config.WINDOW_HEIGHT - 130, Config.WINDOW_WIDTH, 130);
+    private Hud hud;
     private Entity[] entities = new Entity[6];
 
     private final RenderEngine renderEngine = new RenderEngine(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
 
-    public SimulationState(String name, int actualState) {
-        super(name, actualState);
+    public SimulationState(String name, int actualState, Config config) {
+        super(name, actualState, config);
     }
 
     @Override
     public void initializeResources() {
-        entities[0] = new Table(88, Config.WINDOW_HEIGHT / 2, 30, 22);
-        entities[1] = new VacuumCleaner(Config.WINDOW_WIDTH / 2, Config.WINDOW_HEIGHT / 2, 16, 16);
-        entities[2] = new Lamp(Config.WINDOW_WIDTH - 64, 128 - 80, 13, 27);
-        entities[3] = new Shelf((Config.WINDOW_WIDTH / 2) + 64, 128 - 80, 16, 27);
-        entities[4] = new MiniTable(32, (128 + 32), 16, 16);
-        entities[5] = new Television(32, 128, 16, 16);
+        hud = new Hud(0, Config.WINDOW_HEIGHT - 130, Config.WINDOW_WIDTH, 130, config);
+
+        entities[0] = new Table(88, Config.WINDOW_HEIGHT / 2, 30, 22, config.isDebugMode());
+        entities[1] = new VacuumCleaner(Config.WINDOW_WIDTH / 2, Config.WINDOW_HEIGHT / 2, 16, 16, config.isDebugMode());
+        entities[2] = new Lamp(Config.WINDOW_WIDTH - 64, 128 - 80, 13, 27, config.isDebugMode());
+        entities[3] = new Shelf((Config.WINDOW_WIDTH / 2) + 64, 128 - 80, 16, 27, config.isDebugMode());
+        entities[4] = new MiniTable(32, (128 + 32), 16, 16, config.isDebugMode());
+        entities[5] = new Television(32, 128, 16, 16, config.isDebugMode());
 
         // Renderizando as paredes
         for (int x = 0; x < Config.WINDOW_WIDTH; x += 64) {
@@ -55,7 +57,7 @@ public final class SimulationState extends State {
         renderEngine.addEntityToRender(entities[2]);
         renderEngine.addEntityToRender(entities[3]);
 
-        renderEngine.addEntityToRender(new Plant(Config.WINDOW_WIDTH / 2 + 130, 128 - 60, 16, 20));
+        renderEngine.addEntityToRender(new Plant(Config.WINDOW_WIDTH / 2 + 130, 128 - 60, 16, 20, config.isDebugMode()));
 
 //        renderEngine.addEntityToRender(new LeftChair(88 - 36, Config.WINDOW_HEIGHT / 2, 14, 19));
 //        renderEngine.addEntityToRender(new RightChair(88 + 105, Config.WINDOW_HEIGHT / 2, 14, 19));
@@ -87,5 +89,11 @@ public final class SimulationState extends State {
             renderEngine.render(graphics);
             hud.render(graphics);
         }
+    }
+
+    @Override
+    public void dispose() {
+        for (Entity entity : entities)
+            entity.updateConfig(config);
     }
 }

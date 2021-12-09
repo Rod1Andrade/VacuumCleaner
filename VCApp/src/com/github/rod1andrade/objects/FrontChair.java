@@ -11,8 +11,8 @@ public final class FrontChair extends Entity {
 
     private static final Sprite fChairSprite = new Sprite(97, 54, 14, 19, Loader.spriteSheet);
 
-    public FrontChair(int posX, int posY, int width, int height) {
-        super(posX, posY, width, height, fChairSprite, new BoxCollision(posX, posY, width, height));
+    public FrontChair(int posX, int posY, int width, int height, boolean isDebugMode) {
+        super(posX, posY, width, height, fChairSprite, new BoxCollision(posX, posY, width, height), false);
     }
 
     @Override

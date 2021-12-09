@@ -12,7 +12,7 @@ public final class Window extends Entity {
 
 
     public Window(int posX, int posY, int width, int height) {
-        super(posX, posY, width, height, windowSprite, null);
+        super(posX, posY, width, height, windowSprite, null, false);
     }
 
     @Override

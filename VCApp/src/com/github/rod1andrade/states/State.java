@@ -1,5 +1,7 @@
 package com.github.rod1andrade.states;
 
+import com.github.rod1andrade.util.Config;
+
 import java.awt.*;
 
 /**
@@ -14,9 +16,12 @@ public abstract class State {
     protected String name;
     protected int actualState;
 
-    public State(String name, int actualState) {
+    protected Config config;
+
+    public State(String name, int actualState, Config config) {
         this.name = name;
         this.actualState = actualState;
+        this.config = config;
     }
 
     public abstract void initializeResources();
@@ -32,4 +37,6 @@ public abstract class State {
     public void resume() {
         this.actualState = RUNNING;
     }
+
+    public void dispose() {}
 }

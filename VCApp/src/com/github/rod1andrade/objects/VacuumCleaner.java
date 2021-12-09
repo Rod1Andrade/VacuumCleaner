@@ -2,10 +2,8 @@ package com.github.rod1andrade.objects;
 
 import com.github.rod1andrade.assets.Sprite;
 import com.github.rod1andrade.audio.AudioPlayer;
-import com.github.rod1andrade.enums.Mode;
 import com.github.rod1andrade.physics.BoxCollision;
 import com.github.rod1andrade.util.Config;
-import com.github.rod1andrade.util.GlobalInfo;
 import com.github.rod1andrade.util.Loader;
 
 import java.awt.*;
@@ -23,7 +21,7 @@ public class VacuumCleaner extends Entity {
     public static final int DIRECTION_DOWN = 3;
 
     // Fatores de modulo e direcao
-    private final int speed = 2;
+    private int speed = 2;
     private int xVelocity = speed;
     private int yVelocity = 0;
     private int previousDirection = DIRECTION_LEFT;
@@ -51,13 +49,14 @@ public class VacuumCleaner extends Entity {
 
     private AudioPlayer movimentfx;
 
-    public VacuumCleaner(int posX, int posY, int width, int height) {
+    public VacuumCleaner(int posX, int posY, int width, int height, boolean isDebugMode) {
         this.posX = posX;
         this.posY = posY;
         this.width = width * SCALE_FACTOR;
         this.height = height * SCALE_FACTOR;
 
         this.sprite = sprites[actualDirection];
+        this.isDebugMode = isDebugMode;
 
         setBoxCollision(new BoxCollision(posX, posY, width, height));
     }
@@ -66,6 +65,7 @@ public class VacuumCleaner extends Entity {
     public void initResources() {
         super.initResources();
         movimentfx = new AudioPlayer("assets/audios/mixkit-small-hit-in-a-game-2072.wav");
+        speed = Config.getInstance().getVacuumCleanerVelocity();
     }
 
     /**
@@ -109,13 +109,18 @@ public class VacuumCleaner extends Entity {
         if(hasCollision) collisionDirection = actualDirection;
     }
 
+    @Override
+    public void updateConfig(Config config) {
+        super.updateConfig(config);
+        speed = config.getVacuumCleanerVelocity();
+    }
 
     @Override
     public void update(float deltaTime) {
 
         makeMovement();
 
-        if(hasCollision)
+        if(hasCollision && Config.getInstance().hasSound())
             movimentfx.play();
 
 
@@ -143,6 +148,7 @@ public class VacuumCleaner extends Entity {
     private void changeSpriteDirection() {
         this.sprite = this.sprites[actualDirection];
     }
+
 
     private void moveToOppositeDirection(int actualDirection) {
         switch (actualDirection) {
@@ -218,8 +224,7 @@ public class VacuumCleaner extends Entity {
 
     @Override
     public void render(Graphics graphics) {
-
-        if (GlobalInfo.mode == Mode.DEBUG) {
+        if (isDebugMode) {
             String prevDirection = "", actDirection = "";
             switch (previousDirection) {
                 case DIRECTION_LEFT:

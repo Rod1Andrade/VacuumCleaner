@@ -1,9 +1,8 @@
 package com.github.rod1andrade.objects;
 
 import com.github.rod1andrade.assets.Sprite;
-import com.github.rod1andrade.enums.Mode;
 import com.github.rod1andrade.physics.BoxCollision;
-import com.github.rod1andrade.util.GlobalInfo;
+import com.github.rod1andrade.util.Config;
 
 import java.awt.*;
 
@@ -23,15 +22,18 @@ public abstract class Entity {
     protected Sprite sprite;
     protected BoxCollision boxCollision;
 
+    protected boolean isDebugMode;
+
     public Entity() {
     }
 
-    public Entity(int posX, int posY, int width, int height, Sprite sprite, BoxCollision boxCollision) {
+    public Entity(int posX, int posY, int width, int height, Sprite sprite, BoxCollision boxCollision, boolean isDebugMode) {
         this.posX = posX;
         this.posY = posY;
         this.width = width * SCALE_FACTOR;
         this.height = height * SCALE_FACTOR;
         this.sprite = sprite;
+        this.isDebugMode = isDebugMode;
 
         setBoxCollision(boxCollision);
     }
@@ -48,13 +50,17 @@ public abstract class Entity {
 
     public abstract void update(float deltaTime);
 
+    public void updateConfig(Config config) {
+        this.isDebugMode = config.isDebugMode();
+    }
+
     /**
      * Renderizacao da entidade.
      *
      * @param graphics Graphics
      */
     public void render(Graphics graphics) {
-        if (isCollisible() && GlobalInfo.mode == Mode.DEBUG) {
+        if (isCollisible() && isDebugMode) {
             String position = "(" + boxCollision.getX() + ", " + boxCollision.getY() + ")";
 
             graphics.setColor(Color.WHITE);

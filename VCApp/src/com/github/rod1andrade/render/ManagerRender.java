@@ -17,7 +17,7 @@ import java.awt.image.BufferedImage;
 /**
  * @author Rodrigo Andrade
  */
-public final class WindowRender extends Canvas implements Runnable {
+public final class ManagerRender extends Canvas implements Runnable {
 
     private static final long serialVersionUID = 3060247783915240461L;
 
@@ -36,13 +36,16 @@ public final class WindowRender extends Canvas implements Runnable {
     private int currentState = Config.STATE_SIMULATION;
     private State[] states = new State[Config.STATE_QUANTITY_STATE];
 
-    public WindowRender(KeyInput keyInput) {
+    private Config config;
+
+    public ManagerRender(KeyInput keyInput) {
         setMinimumSize(new Dimension(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT));
         setMaximumSize(new Dimension(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT));
         setPreferredSize(new Dimension(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT));
         setFocusable(true);
 
         this.keyInput = keyInput;
+        config = Config.getInstance();
     }
 
     /**
@@ -51,8 +54,10 @@ public final class WindowRender extends Canvas implements Runnable {
     public synchronized void initResources() {
         addKeyListener(keyInput);
 
-        states[Config.STATE_MENU] = new MenuState("Menu State", State.RUNNING, keyInput);
-        states[Config.STATE_SIMULATION] = new SimulationState("Simulation", State.RUNNING);
+        config.defaultConfig();
+
+        states[Config.STATE_MENU] = new MenuState("Menu State", State.RUNNING, keyInput,config);
+        states[Config.STATE_SIMULATION] = new SimulationState("Simulation", State.RUNNING, config);
 
         // Inicia os recurso de cada state
         for(State state : states)
@@ -93,18 +98,20 @@ public final class WindowRender extends Canvas implements Runnable {
         }
 
         if(keyInput.hasPressed(KeyEvent.VK_ESCAPE)) {
-            states[currentState].pause();
-            currentState = Config.STATE_MENU;
-            states[currentState].resume();
+            changeState(Config.STATE_MENU);
         }
 
         if(keyInput.hasPressed(KeyEvent.VK_S)) {
-            states[currentState].pause();
-            currentState = Config.STATE_SIMULATION;
-            states[currentState].resume();
+            changeState(Config.STATE_SIMULATION);
         }
     }
 
+    private synchronized void changeState(int state) {
+        states[currentState].pause();
+        states[currentState].dispose();
+        currentState = state;
+        states[currentState].resume();
+    }
 
     /**
      * Metodo que vai ser chamado a uma taxa aproximada

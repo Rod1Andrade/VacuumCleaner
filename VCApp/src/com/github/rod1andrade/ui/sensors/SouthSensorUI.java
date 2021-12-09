@@ -9,8 +9,8 @@ public final class SouthSensorUI extends SensorUI {
 
     private VacuumCleaner vacuumCleaner;
 
-    public SouthSensorUI(int posX, int posY, int width, int height, String label, VacuumCleaner vacuumCleaner) {
-        super(posX, posY, width, height, label);
+    public SouthSensorUI(int posX, int posY, int width, int height, String label, VacuumCleaner vacuumCleaner, boolean isDebugMode) {
+        super(posX, posY, width, height, label, isDebugMode);
         this.vacuumCleaner = vacuumCleaner;
     }
 

@@ -1,9 +1,7 @@
 package com.github.rod1andrade.ui.sensors;
 
 import com.github.rod1andrade.assets.Sprite;
-import com.github.rod1andrade.enums.Mode;
 import com.github.rod1andrade.objects.Entity;
-import com.github.rod1andrade.util.GlobalInfo;
 import com.github.rod1andrade.util.Loader;
 
 import java.awt.*;
@@ -21,19 +19,19 @@ public abstract class SensorUI extends Entity {
 
     private String label = "Label";
 
-
     private Sprite[] sprites = {
             new Sprite(112, 64, 16, 16, Loader.spriteSheet001),
             new Sprite(128, 64, 16, 16, Loader.spriteSheet001),
     };
 
-    public SensorUI(int posX, int posY, int width, int height, String label) {
+    public SensorUI(int posX, int posY, int width, int height, String label, boolean isDebugMode) {
         this.posX = posX;
         this.posY = posY;
         this.width = width * SCALE_FACTOR;
         this.height = height * SCALE_FACTOR;
 
         this.sprite = sprites[currentSprite];
+        this.isDebugMode = isDebugMode;
 
         setLabel(label);
     }
@@ -82,7 +80,7 @@ public abstract class SensorUI extends Entity {
         graphics.setColor(Color.WHITE);
         graphics.drawString(label, posX + font.getSize() + label.length() / 2, posY - font.getSize() / 2);
 
-        if(GlobalInfo.mode == Mode.DEBUG) {
+        if(isDebugMode) {
             graphics.drawString("" +doAnimation(), posX, (posY + height) + 10);
         }
 

@@ -24,7 +24,7 @@ public class DirectionBoxUI extends Entity {
     };
 
     public DirectionBoxUI(int posX, int posY, int width, int height) {
-        super(posX, posY, width, height, directionHudSprite, null);
+        super(posX, posY, width, height, directionHudSprite, null, false);
     }
 
     public void setVacuumCleaner(VacuumCleaner vacuumCleaner) {

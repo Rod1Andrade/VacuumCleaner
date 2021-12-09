@@ -19,7 +19,6 @@ public class Config {
      */
     public static final int STATE_MENU = 0;
     public static final int STATE_SIMULATION = 1;
-
     public static final int STATE_QUANTITY_STATE = 2;
 
     /**
@@ -46,6 +45,18 @@ public class Config {
     public static final int AMOUNT_RENDER_THRASH_TYPE_RANDOM = 5;
 
     /**
+     * Configuracoes do som
+     */
+    public static final int SOUND_ON = 6;
+    public static final int SOUND_OFF = 7;
+
+    /**
+     * Configuracao de Mode
+     */
+    public static final int MODE_NO_DEBUG = 8;
+    public static final int MODE_DEBUG = 9;
+
+    /**
      * Velocidades
      */
     public static final int VACUUM_CLEANER_SPEED_2 = 2;
@@ -61,9 +72,21 @@ public class Config {
     private int timeLimit;
     private int amountRenderThrashType;
     private int vacuumCleanerVelocity;
+    private int sound;
+    private int mode;
 
-    public Config() {
+    private static Config instance;
+
+    private Config() {
         defaultConfig();
+    }
+
+    public static Config getInstance() {
+        if(instance == null) {
+            instance = new Config();
+        }
+
+        return instance;
     }
 
     /**
@@ -74,6 +97,8 @@ public class Config {
         timeLimit = TIME_MODE_NO_TIME;
         amountRenderThrashType = AMOUNT_RENDER_THRASH_TYPE_RANDOM;
         vacuumCleanerVelocity = VACUUM_CLEANER_SPEED_2;
+        sound = SOUND_OFF;
+        mode = MODE_NO_DEBUG;
     }
 
     public int getSimulationMode() {
@@ -106,5 +131,41 @@ public class Config {
 
     public void setVacuumCleanerVelocity(int vacuumCleanerVelocity) {
         this.vacuumCleanerVelocity = vacuumCleanerVelocity;
+    }
+
+    public boolean isDebugMode() {
+        return mode == MODE_DEBUG;
+    }
+
+    public void setMode(int mode) {
+        this.mode = mode;
+    }
+
+    public int getMode() {
+        return mode;
+    }
+
+    public void setSound(int sound) {
+        this.sound = sound;
+    }
+
+    public int getSound() {
+        return sound;
+    }
+
+    @Override
+    public String toString() {
+        return "Config{" +
+                "simulationMode=" + simulationMode +
+                ", timeLimit=" + timeLimit +
+                ", amountRenderThrashType=" + amountRenderThrashType +
+                ", vacuumCleanerVelocity=" + vacuumCleanerVelocity +
+                ", sound=" + sound +
+                ", mode=" + mode +
+                '}';
+    }
+
+    public boolean hasSound() {
+        return instance.sound == SOUND_ON;
     }
 }
