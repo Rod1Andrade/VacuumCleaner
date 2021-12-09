@@ -1,12 +1,12 @@
 package com.github.rod1andrade.objects;
 
+import com.github.rod1andrade.assets.Sprite;
 import com.github.rod1andrade.audio.AudioPlayer;
 import com.github.rod1andrade.enums.Mode;
 import com.github.rod1andrade.physics.BoxCollision;
-import com.github.rod1andrade.render.WindowRender;
-import com.github.rod1andrade.util.Loader;
-import com.github.rod1andrade.assets.Sprite;
+import com.github.rod1andrade.util.Config;
 import com.github.rod1andrade.util.GlobalInfo;
+import com.github.rod1andrade.util.Loader;
 
 import java.awt.*;
 import java.util.Random;
@@ -91,15 +91,17 @@ public class VacuumCleaner extends Entity {
             }
         }
 
-        if (posX + width >= WindowRender.WIDTH) {
+        if (posX + width >= Config.WINDOW_WIDTH) {
             hasCollision = true;
         }
-        if (posY + height >= WindowRender.HEIGHT - 130) {
+
+        if (posY + height >= Config.WINDOW_HEIGHT - 130) {
             hasCollision = true;
         }
         if (posX <= 0) {
             hasCollision = true;
         }
+
         if (posY <= 130) {
             hasCollision = true;
         }

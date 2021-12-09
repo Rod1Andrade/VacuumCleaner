@@ -8,6 +8,21 @@ package com.github.rod1andrade.util;
 public class Config {
 
     /**
+     * Configuracoes da janela Window
+     */
+    public static final int WINDOW_ASPECT_RATIO = 4 / 3;
+    public static final int WINDOW_WIDTH = 750;
+    public static final int WINDOW_HEIGHT = WINDOW_WIDTH * WINDOW_ASPECT_RATIO;
+
+    /**
+     * Configuracao de estados
+     */
+    public static final int STATE_MENU = 0;
+    public static final int STATE_SIMULATION = 1;
+
+    public static final int STATE_QUANTITY_STATE = 2;
+
+    /**
      * Modo de simulacao
      */
     public static final int SIMULATION_MODE_TIME = 1;

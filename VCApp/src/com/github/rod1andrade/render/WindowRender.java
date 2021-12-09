@@ -1,18 +1,17 @@
 package com.github.rod1andrade.render;
 
-import com.github.rod1andrade.objects.*;
 import com.github.rod1andrade.enums.Mode;
 import com.github.rod1andrade.inputs.KeyInput;
-import com.github.rod1andrade.objects.Window;
-import com.github.rod1andrade.ui.Hud;
+import com.github.rod1andrade.states.MenuState;
+import com.github.rod1andrade.states.SimulationState;
+import com.github.rod1andrade.states.State;
+import com.github.rod1andrade.util.Config;
 import com.github.rod1andrade.util.GlobalInfo;
 
-import java.awt.Canvas;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.awt.Graphics;
 
 
 /**
@@ -29,24 +28,18 @@ public final class WindowRender extends Canvas implements Runnable {
     private final static int ONE_SECOND_IN_MILIS = 1000;
     private final static int BUFFER_STRATEGY = 2;
 
-    // Informacoes de tamanho da tela de renderizacao
-    public static final int ASPECT_RATIO = 4 / 3;
-    public static final int WIDTH = 750;
-    public static final int HEIGHT = WIDTH * ASPECT_RATIO;
-
     private boolean isRunning;
     private Thread windowRenderThread;
 
-    private final BufferedImage bufferedImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-    private final RenderEngine renderEngine = new RenderEngine(WIDTH, HEIGHT);
+    private final BufferedImage bufferedImage = new BufferedImage(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT, BufferedImage.TYPE_INT_RGB);
 
-    private Hud hud = new Hud(0, HEIGHT - 130, WIDTH, 130);
-    private Entity[] entities = new Entity[6];
+    private int currentState = Config.STATE_SIMULATION;
+    private State[] states = new State[Config.STATE_QUANTITY_STATE];
 
     public WindowRender(KeyInput keyInput) {
-        setMinimumSize(new Dimension(WIDTH, HEIGHT));
-        setMaximumSize(new Dimension(WIDTH, HEIGHT));
-        setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        setMinimumSize(new Dimension(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT));
+        setMaximumSize(new Dimension(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT));
+        setPreferredSize(new Dimension(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT));
         setFocusable(true);
 
         this.keyInput = keyInput;
@@ -58,51 +51,13 @@ public final class WindowRender extends Canvas implements Runnable {
     public synchronized void initResources() {
         addKeyListener(keyInput);
 
-        entities[0] = new Table(88, getHeight() / 2, 30, 22);
-        entities[1] = new VacuumCleaner(getWidth() / 2, getHeight() / 2, 16, 16);
-        entities[2] = new Lamp(getWidth() - 64, 128 - 80, 13, 27);
-        entities[3] = new Shelf((getWidth() / 2) + 64, 128 - 80, 16, 27);
-        entities[4] = new MiniTable(32, (128 + 32), 16, 16);
-        entities[5] = new Television(32, 128, 16, 16);
+        states[Config.STATE_MENU] = new MenuState("Menu State", State.RUNNING, keyInput);
+        states[Config.STATE_SIMULATION] = new SimulationState("Simulation", State.RUNNING);
 
-        // Renderizando as paredes
-        for (int x = 0; x < getWidth(); x += 64) {
-            renderEngine.addEntityToRender(new StripedWall(x, 0, 16, 32));
-        }
+        // Inicia os recurso de cada state
+        for(State state : states)
+            state.initializeResources();
 
-        // Renderizando o chao
-        for (int y = 128; y < getHeight() - hud.getHeight(); y += 64) {
-            for (int x = 0; x < getWidth(); x += 64) {
-                renderEngine.addEntityToRender(new Floor(x, y, 16, 16));
-            }
-        }
-
-        // Objetos
-        renderEngine.addEntityToRender(new Window(48, (64 - 16) / 2, 14, 14));
-
-        renderEngine.addEntityToRender(new Mat(getWidth() / 2, getHeight() / 2, 48, 32));
-        renderEngine.addEntityToRender(new OilPaint((getWidth() / 2) - 16, (64 - 16) / 2, 16, 16));
-
-        renderEngine.addEntityToRender(entities[4]);
-        renderEngine.addEntityToRender(entities[5]);
-
-        renderEngine.addEntityToRender(entities[2]);
-        renderEngine.addEntityToRender(entities[3]);
-
-        renderEngine.addEntityToRender(new Plant(getWidth() / 2 + 130, 128 - 60, 16, 20));
-
-//        renderEngine.addEntityToRender(new LeftChair(88 - 36, getHeight() / 2, 14, 19));
-//        renderEngine.addEntityToRender(new RightChair(88 + 105, getHeight() / 2, 14, 19));
-//        renderEngine.addEntityToRender(new BackChair(88 + 30, getHeight() / 2 - 52, 14, 19));
-        renderEngine.addEntityToRender(entities[0]);
-//        renderEngine.addEntityToRender(new FrontChair(88 + 30, getHeight() / 2 + 66, 14, 19));
-
-        renderEngine.addEntityToRender(entities[1]);
-
-        hud.setHudVacuumCleanerInfo(((VacuumCleaner) entities[1]));
-        ((VacuumCleaner) entities[1]).setEntities(entities);
-
-        entities[1].initResources();
         addNotify();
     }
 
@@ -128,7 +83,7 @@ public final class WindowRender extends Canvas implements Runnable {
     /**
      * Trabalha com as entradas do usuario.
      */
-    public void userInputs() {
+    public synchronized void userInputs() {
         if (keyInput.hasPressed(KeyEvent.VK_D)) {
             GlobalInfo.mode = Mode.DEBUG;
         }
@@ -136,22 +91,27 @@ public final class WindowRender extends Canvas implements Runnable {
         if (keyInput.hasPressed(KeyEvent.VK_N)) {
             GlobalInfo.mode = Mode.DEV;
         }
+
+        if(keyInput.hasPressed(KeyEvent.VK_ESCAPE)) {
+            states[currentState].pause();
+            currentState = Config.STATE_MENU;
+            states[currentState].resume();
+        }
+
+        if(keyInput.hasPressed(KeyEvent.VK_S)) {
+            states[currentState].pause();
+            currentState = Config.STATE_SIMULATION;
+            states[currentState].resume();
+        }
     }
 
-    /**
-     * Metodo de colisao.
-     */
-    public void collision() {
-        ((VacuumCleaner) entities[1]).collision();
-    }
 
     /**
      * Metodo que vai ser chamado a uma taxa aproximada
      * de 60 updates por segundo para fazer acoes.
      */
     public void update(float deltaTime) {
-        entities[1].update(deltaTime);
-        hud.update(deltaTime);
+        states[currentState].update(deltaTime);
     }
 
     /**
@@ -168,13 +128,10 @@ public final class WindowRender extends Canvas implements Runnable {
         // Cria grafico a partir do buffer da imagem e desenha nela
         Graphics bufferedImageGraphics = bufferedImage.createGraphics();
 
-        renderEngine.clear(bufferedImageGraphics);
-        renderEngine.render(bufferedImageGraphics);
-        hud.render(bufferedImageGraphics);
+        states[currentState].render(bufferedImageGraphics);
 
         // Cria um grafico a partir do buffer strategy (prove o page flip)
         Graphics bufferStrategyDrawGraphics = bufferStrategy.getDrawGraphics();
-
 
         // Desenha a imagem no grafico do buffer strategy
         bufferStrategyDrawGraphics.drawImage(bufferedImage, 0, 0, null);
@@ -219,7 +176,6 @@ public final class WindowRender extends Canvas implements Runnable {
             userInputs();
 
             while (delta >= 1) {
-                collision();
                 update((float) delta);
                 ups++;
                 delta--;

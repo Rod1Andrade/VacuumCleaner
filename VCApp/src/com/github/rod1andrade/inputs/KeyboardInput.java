@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
  */
 public class KeyboardInput extends KeyInput {
 
-    private boolean[] keys = new boolean[256];
+    private boolean[] keys = new boolean[524];
 
     /**
      * Verifica se foi pressionado.
@@ -26,13 +26,11 @@ public class KeyboardInput extends KeyInput {
 
     @Override
     public synchronized void keyPressed(KeyEvent e) {
-        super.keyPressed(e);
         keys[e.getKeyCode()] = true;
     }
 
     @Override
     public synchronized void keyReleased(KeyEvent e) {
-        super.keyReleased(e);
         keys[e.getKeyCode()] = false;
     }
 }
