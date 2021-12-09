@@ -71,7 +71,7 @@ public final class WindowRender extends Canvas implements Runnable {
         }
 
         // Renderizando o chao
-        for (int y = 128; y < getHeight()  - hud.getHeight(); y += 64) {
+        for (int y = 128; y < getHeight() - hud.getHeight(); y += 64) {
             for (int x = 0; x < getWidth(); x += 64) {
                 renderEngine.addEntityToRender(new Floor(x, y, 16, 16));
             }
@@ -125,6 +125,9 @@ public final class WindowRender extends Canvas implements Runnable {
         windowRenderThread.join();
     }
 
+    /**
+     * Trabalha com as entradas do usuario.
+     */
     public void userInputs() {
         if (keyInput.hasPressed(KeyEvent.VK_D)) {
             GlobalInfo.mode = Mode.DEBUG;
@@ -174,8 +177,6 @@ public final class WindowRender extends Canvas implements Runnable {
 
 
         // Desenha a imagem no grafico do buffer strategy
-        // TODO: Ideia de zooom in e zoom out: Camera seguir o aspirador de po
-//        bufferStrategyDrawGraphics.drawImage(bufferedImage.getScaledInstance(WIDTH * 2, HEIGHT * 2, BufferedImage.SCALE_DEFAULT), (getWidth() / 2) * - 1, (getHeight() / 2) * -1, null);
         bufferStrategyDrawGraphics.drawImage(bufferedImage, 0, 0, null);
 
         bufferedImageGraphics.dispose();
@@ -184,6 +185,11 @@ public final class WindowRender extends Canvas implements Runnable {
         } while (bufferStrategy.contentsLost());
     }
 
+    /**
+     * Thread sleep encapsulado.
+     *
+     * @param time
+     */
     public void waitTime(long time) {
         try {
             Thread.sleep(time);
@@ -227,12 +233,11 @@ public final class WindowRender extends Canvas implements Runnable {
                 fps++;
             }
 
-//            if (System.currentTimeMillis() - millisBeforeTime > ONE_SECOND_IN_MILIS) {
-//                millisBeforeTime += ONE_SECOND_IN_MILIS;
-//                Log.consoleLog("ups: " + ups + ", fps: " + fps);
-//                ups = 0;
-//                fps = 0;
-//            }
+            if (System.currentTimeMillis() - millisBeforeTime > ONE_SECOND_IN_MILIS) {
+                millisBeforeTime += ONE_SECOND_IN_MILIS;
+                ups = 0;
+                fps = 0;
+            }
         }
     }
 }
