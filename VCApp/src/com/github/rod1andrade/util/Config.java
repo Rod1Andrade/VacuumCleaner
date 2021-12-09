@@ -15,6 +15,12 @@ public class Config {
     public static final int WINDOW_HEIGHT = WINDOW_WIDTH * WINDOW_ASPECT_RATIO;
 
     /**
+     * Constantes de configuracao de renderizacao
+     */
+    public final static double RENDER_NS_PER_60_UPS = 1_000_000_000.0 / 60.0;
+    public final static int RENDER_BUFFER_STRATEGY = 2;
+
+    /**
      * Configuracao de estados
      */
     public static final int STATE_MENU = 0;

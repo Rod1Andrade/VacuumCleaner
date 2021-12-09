@@ -6,7 +6,6 @@ import com.github.rod1andrade.physics.BoxCollision;
 import com.github.rod1andrade.util.Config;
 import com.github.rod1andrade.util.Loader;
 
-import java.awt.*;
 import java.util.Random;
 
 /**
@@ -33,7 +32,7 @@ public class VacuumCleaner extends Entity {
 
     // Variaveis de controle da atualizacao de movimentos com base no deltaTime.
     private int controllingDeltaTimeToCollision = 0;
-    private long time = System.currentTimeMillis();
+    private long countTimeToChangeDirection = System.currentTimeMillis();
     public static final int RANDOM_MOVEMENT_COOLDOWN = 2000;
 
     // Sprites de cada direcao
@@ -106,7 +105,7 @@ public class VacuumCleaner extends Entity {
             hasCollision = true;
         }
 
-        if(hasCollision) collisionDirection = actualDirection;
+        if (hasCollision) collisionDirection = actualDirection;
     }
 
     @Override
@@ -120,7 +119,7 @@ public class VacuumCleaner extends Entity {
 
         makeMovement();
 
-        if(hasCollision && Config.getInstance().hasSound())
+        if (hasCollision && Config.getInstance().hasSound())
             movimentfx.play();
 
 
@@ -133,23 +132,35 @@ public class VacuumCleaner extends Entity {
             controllingDeltaTimeToCollision = 0;
         }
 
-        if (!hasCollision && System.currentTimeMillis() - time > RANDOM_MOVEMENT_COOLDOWN) {
+        if (!hasCollision && System.currentTimeMillis() - countTimeToChangeDirection > RANDOM_MOVEMENT_COOLDOWN) {
             randomMovement();
-            time = System.currentTimeMillis();
+            countTimeToChangeDirection = System.currentTimeMillis();
         }
 
         controllingDeltaTimeToCollision += deltaTime;
     }
 
+    /**
+     * Vefifica se houve mudanca de direcao.
+     *
+     * @return
+     */
     private boolean hasChangedDirection() {
         return previousDirection != actualDirection;
     }
 
+    /**
+     * Muda a direcao do sprite.
+     */
     private void changeSpriteDirection() {
         this.sprite = this.sprites[actualDirection];
     }
 
-
+    /**
+     * Move para a posicao oposta a passada como argumento.
+     *
+     * @param actualDirection int
+     */
     private void moveToOppositeDirection(int actualDirection) {
         switch (actualDirection) {
             case DIRECTION_LEFT:
@@ -167,6 +178,9 @@ public class VacuumCleaner extends Entity {
         }
     }
 
+    /**
+     * Gera um movimento aleatorio.
+     */
     public void randomMovement() {
 
         int randomMovement = random.nextInt(4);
@@ -220,68 +234,6 @@ public class VacuumCleaner extends Entity {
         xVelocity = 0;
         previousDirection = actualDirection;
         actualDirection = DIRECTION_DOWN;
-    }
-
-    @Override
-    public void render(Graphics graphics) {
-        if (isDebugMode) {
-            String prevDirection = "", actDirection = "";
-            switch (previousDirection) {
-                case DIRECTION_LEFT:
-                    prevDirection = "Left";
-                    break;
-                case DIRECTION_RIGHT:
-                    prevDirection = "Right";
-                    break;
-                case DIRECTION_UPPER:
-                    prevDirection = "Upper";
-                    break;
-                case DIRECTION_DOWN:
-                    prevDirection = "Down";
-                    break;
-            }
-
-            switch (actualDirection) {
-                case DIRECTION_LEFT:
-                    actDirection = "Left";
-                    break;
-                case DIRECTION_RIGHT:
-                    actDirection = "Right";
-                    break;
-                case DIRECTION_UPPER:
-                    actDirection = "Upper";
-                    break;
-                case DIRECTION_DOWN:
-                    actDirection = "Down";
-                    break;
-            }
-
-            graphics.setColor(Color.WHITE);
-            graphics.setFont(new Font("Dialog", Font.PLAIN, 25));
-            graphics.drawString("Previous Direction: " + prevDirection, 10, 25);
-            graphics.drawString("Actual Direction: " + actDirection, 10, 55);
-
-            graphics.setFont(new Font("Dialog", Font.PLAIN, 12));
-            String position = "(" + boxCollision.getX() + ", " + boxCollision.getY() + ")";
-
-            graphics.setColor(Color.WHITE);
-            graphics.drawString(position, boxCollision.getX(), boxCollision.getY());
-
-            String size = "(" + boxCollision.getWidth() + ", " + boxCollision.getHeight() + ")";
-            graphics.setColor(Color.WHITE);
-            graphics.drawString(size, boxCollision.getX() + boxCollision.getWidth(),
-                    boxCollision.getY() + boxCollision.getHeight());
-
-            if (hasCollision) {
-                graphics.setColor(Color.RED);
-            } else {
-                graphics.setColor(Color.GREEN);
-            }
-
-            graphics.drawRect(boxCollision.getX(), boxCollision.getY(), boxCollision.getWidth(),
-                    boxCollision.getHeight());
-        }
-        graphics.drawImage(sprite.getSprite(SCALE_FACTOR), posX, posY, null);
     }
 
     public synchronized int getActualDirection() {

@@ -1,4 +1,4 @@
-package com.github.rod1andrade.ui;
+package com.github.rod1andrade.ui.infos;
 
 import com.github.rod1andrade.assets.Sprite;
 import com.github.rod1andrade.objects.Entity;

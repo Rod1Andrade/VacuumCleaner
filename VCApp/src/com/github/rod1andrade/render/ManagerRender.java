@@ -1,12 +1,10 @@
 package com.github.rod1andrade.render;
 
-import com.github.rod1andrade.enums.Mode;
 import com.github.rod1andrade.inputs.KeyInput;
 import com.github.rod1andrade.states.MenuState;
 import com.github.rod1andrade.states.SimulationState;
 import com.github.rod1andrade.states.State;
 import com.github.rod1andrade.util.Config;
-import com.github.rod1andrade.util.GlobalInfo;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -23,10 +21,8 @@ public final class ManagerRender extends Canvas implements Runnable {
 
     private KeyInput keyInput;
 
-    // Constantes de configuracao
-    private final static double NS_PER_60_UPS = 1_000_000_000.0 / 60.0;
-    private final static int ONE_SECOND_IN_MILIS = 1000;
-    private final static int BUFFER_STRATEGY = 2;
+    private int ups = 0;
+    private int fps = 0;
 
     private boolean isRunning;
     private Thread windowRenderThread;
@@ -56,11 +52,11 @@ public final class ManagerRender extends Canvas implements Runnable {
 
         config.defaultConfig();
 
-        states[Config.STATE_MENU] = new MenuState("Menu State", State.RUNNING, keyInput,config);
+        states[Config.STATE_MENU] = new MenuState("Menu State", State.RUNNING, keyInput, config);
         states[Config.STATE_SIMULATION] = new SimulationState("Simulation", State.RUNNING, config);
 
         // Inicia os recurso de cada state
-        for(State state : states)
+        for (State state : states)
             state.initializeResources();
 
         addNotify();
@@ -89,23 +85,20 @@ public final class ManagerRender extends Canvas implements Runnable {
      * Trabalha com as entradas do usuario.
      */
     public synchronized void userInputs() {
-        if (keyInput.hasPressed(KeyEvent.VK_D)) {
-            GlobalInfo.mode = Mode.DEBUG;
-        }
-
-        if (keyInput.hasPressed(KeyEvent.VK_N)) {
-            GlobalInfo.mode = Mode.DEV;
-        }
-
-        if(keyInput.hasPressed(KeyEvent.VK_ESCAPE)) {
+        if (keyInput.hasPressed(KeyEvent.VK_ESCAPE)) {
             changeState(Config.STATE_MENU);
         }
 
-        if(keyInput.hasPressed(KeyEvent.VK_S)) {
+        if (keyInput.hasPressed(KeyEvent.VK_S)) {
             changeState(Config.STATE_SIMULATION);
         }
     }
 
+    /**
+     * Altera o estado.
+     *
+     * @param state
+     */
     private synchronized void changeState(int state) {
         states[currentState].pause();
         states[currentState].dispose();
@@ -128,7 +121,7 @@ public final class ManagerRender extends Canvas implements Runnable {
     public void render() {
         BufferStrategy bufferStrategy = getBufferStrategy();
         if (bufferStrategy == null) {
-            createBufferStrategy(BUFFER_STRATEGY);
+            createBufferStrategy(Config.RENDER_BUFFER_STRATEGY);
             return;
         }
 
@@ -169,8 +162,6 @@ public final class ManagerRender extends Canvas implements Runnable {
         long nsBeforeTime = System.nanoTime();
 
         double delta = 0;
-        int ups = 0;
-        int fps = 0;
 
         while (isRunning) {
             boolean shouldRender = false;
@@ -178,7 +169,7 @@ public final class ManagerRender extends Canvas implements Runnable {
             long difference = nsNowTime - nsBeforeTime;
 
             nsBeforeTime = nsNowTime;
-            delta += difference / NS_PER_60_UPS;
+            delta += difference / Config.RENDER_NS_PER_60_UPS;
 
             userInputs();
 
@@ -196,8 +187,8 @@ public final class ManagerRender extends Canvas implements Runnable {
                 fps++;
             }
 
-            if (System.currentTimeMillis() - millisBeforeTime > ONE_SECOND_IN_MILIS) {
-                millisBeforeTime += ONE_SECOND_IN_MILIS;
+            if (System.currentTimeMillis() - millisBeforeTime > 1000) {
+                millisBeforeTime += 1000;
                 ups = 0;
                 fps = 0;
             }

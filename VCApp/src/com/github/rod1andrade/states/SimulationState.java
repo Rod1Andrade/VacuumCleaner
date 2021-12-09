@@ -3,7 +3,7 @@ package com.github.rod1andrade.states;
 import com.github.rod1andrade.objects.*;
 import com.github.rod1andrade.objects.Window;
 import com.github.rod1andrade.render.RenderEngine;
-import com.github.rod1andrade.ui.Hud;
+import com.github.rod1andrade.ui.infos.Hud;
 import com.github.rod1andrade.util.Config;
 
 import java.awt.*;
