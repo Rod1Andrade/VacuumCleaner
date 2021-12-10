@@ -1,6 +1,8 @@
 
 # Vacuum Cleaner
 
+![enter image description here](https://user-images.githubusercontent.com/51142291/145624755-0e234325-336c-4759-8351-5256d7bbd3a0.png)
+
 Aplicação desenvolvida para a disciplina de programação 2 do curso de sistema de informação da Universidade Estadual de Goiás.
 ***Objetivo**: Moldar um programa orientado a objetos com interface gráfica.*
 
