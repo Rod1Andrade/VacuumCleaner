@@ -7,13 +7,13 @@ import java.util.List;
 /**
  * @author Rodrigo Andrade
  */
-public class MenuData {
+public class SingleMenuData {
 
     private String label;
     private int selectedOption;
     private List<MenuOption> menuOptions = new ArrayList<>();
 
-    public MenuData(String label, int selectedOptionCode, MenuOption ... menuOptions) {
+    public SingleMenuData(String label, int selectedOptionCode, MenuOption ... menuOptions) {
         this.label = label;
         this.menuOptions.addAll(Arrays.asList(menuOptions));
 

@@ -134,7 +134,7 @@ public final class SimulationState extends State {
     public void dispose() {
         for (RenderEntity renderEntity : renderEntities)
             renderEntity.updateConfig(config);
-
+        vacuumCleanerRenderEntity.updateConfig(config);
         vacuumCleanerModel.setVelocity(config.getVacuumCleanerVelocity());
     }
 }

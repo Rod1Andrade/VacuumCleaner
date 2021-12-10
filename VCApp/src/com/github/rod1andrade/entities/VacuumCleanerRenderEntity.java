@@ -26,8 +26,6 @@ public class VacuumCleanerRenderEntity extends RenderEntity {
     private int previousDirection = DIRECTION_LEFT;
     private int actualDirection = DIRECTION_RIGHT;
 
-
-
     // Sprites de cada direcao
     private final Sprite[] sprites = {new Sprite(80, 48, 16, 16, Loader.spriteSheet001),
             new Sprite(80, 32, 16, 16, Loader.spriteSheet001), new Sprite(96, 48, 16, 16, Loader.spriteSheet001),
@@ -57,7 +55,6 @@ public class VacuumCleanerRenderEntity extends RenderEntity {
     public void initResources() {
         super.initResources();
         movimentfx = new AudioPlayer("assets/audios/mixkit-small-hit-in-a-game-2072.wav");
-        speed = Config.getInstance().getVacuumCleanerVelocity();
     }
 
     @Override
