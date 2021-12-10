@@ -105,7 +105,7 @@ public class GlobalConfig {
         amountRenderThrashType = AMOUNT_RENDER_THRASH_TYPE_RANDOM;
         vacuumCleanerVelocity = VACUUM_CLEANER_SPEED_2;
         sound = SOUND_OFF;
-        mode = MODE_DEBUG;
+        mode = MODE_NO_DEBUG;
     }
 
     public int getSimulationMode() {
