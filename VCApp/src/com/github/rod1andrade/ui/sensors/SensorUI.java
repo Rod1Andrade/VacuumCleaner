@@ -1,7 +1,7 @@
 package com.github.rod1andrade.ui.sensors;
 
 import com.github.rod1andrade.assets.Sprite;
-import com.github.rod1andrade.objects.Entity;
+import com.github.rod1andrade.entities.RenderEntity;
 import com.github.rod1andrade.util.Loader;
 
 import java.awt.*;
@@ -9,7 +9,7 @@ import java.awt.*;
 /**
  * @author Rodrigo Andrade
  */
-public abstract class SensorUI extends Entity {
+public abstract class SensorUI extends RenderEntity {
 
     private int currentSprite = 0;
     private int controllingAnimationTime = 0;

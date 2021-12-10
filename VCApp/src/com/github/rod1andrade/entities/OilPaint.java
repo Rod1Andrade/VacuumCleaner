@@ -1,4 +1,4 @@
-package com.github.rod1andrade.objects;
+package com.github.rod1andrade.entities;
 
 import com.github.rod1andrade.util.Loader;
 import com.github.rod1andrade.assets.Sprite;
@@ -6,7 +6,7 @@ import com.github.rod1andrade.assets.Sprite;
 /**
  * @author Rodrigo Andrade
  */
-public final class OilPaint extends Entity {
+public final class OilPaint extends RenderEntity {
 
     private static final Sprite oilPaintSprite = new Sprite(32, 32, 16, 16, Loader.spriteSheet);
 

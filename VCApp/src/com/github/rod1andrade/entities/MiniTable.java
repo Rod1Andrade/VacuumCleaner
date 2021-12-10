@@ -1,4 +1,4 @@
-package com.github.rod1andrade.objects;
+package com.github.rod1andrade.entities;
 
 import com.github.rod1andrade.assets.Sprite;
 import com.github.rod1andrade.physics.BoxCollision;
@@ -7,7 +7,7 @@ import com.github.rod1andrade.util.Loader;
 /**
  * @author Rodrigo Andrade
  */
-public final class MiniTable extends Entity {
+public final class MiniTable extends RenderEntity {
 
     private static final Sprite minTableSprite = new Sprite(64, 33, 16, 16, Loader.spriteSheet);
 

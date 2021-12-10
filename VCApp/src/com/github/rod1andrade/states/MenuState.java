@@ -1,6 +1,5 @@
 package com.github.rod1andrade.states;
 
-import com.github.rod1andrade.enums.Mode;
 import com.github.rod1andrade.inputs.KeyInput;
 import com.github.rod1andrade.ui.menu.MenuData;
 import com.github.rod1andrade.ui.menu.MenuOption;
@@ -11,6 +10,9 @@ import java.awt.event.KeyEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+/**
+ * @author Rodrigo Andrade
+ */
 public class MenuState extends State {
 
     private final int space = (int) (Config.WINDOW_WIDTH * 0.10);
@@ -65,7 +67,7 @@ public class MenuState extends State {
             new MenuOption("Off", 2, Config.SOUND_OFF)
     );
 
-    private MenuData[] menuData = { simulationMode, time, renderThrashType, vacuumCleanerVelocity, debug, sound };
+    private MenuData[] menuData = {simulationMode, time, renderThrashType, vacuumCleanerVelocity, debug, sound};
 
     private KeyInput keyInput;
 

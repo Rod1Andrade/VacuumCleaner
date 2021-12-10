@@ -1,4 +1,4 @@
-package com.github.rod1andrade.objects;
+package com.github.rod1andrade.entities;
 
 import com.github.rod1andrade.assets.Sprite;
 import com.github.rod1andrade.physics.BoxCollision;
@@ -7,7 +7,7 @@ import com.github.rod1andrade.util.Loader;
 /**
  * @author Rodrigo Andrade
  */
-public final class Table extends Entity {
+public final class Table extends RenderEntity {
 
     private static final Sprite tableSprite = new Sprite(97, 7, 30, 22, Loader.spriteSheet);
 

@@ -1,22 +1,23 @@
 package com.github.rod1andrade.ui.sensors;
 
-import com.github.rod1andrade.objects.VacuumCleaner;
-import com.github.rod1andrade.ui.sensors.SensorUI;
+import com.github.rod1andrade.entities.VacuumCleanerRenderEntity;
+import com.github.rod1andrade.model.VacuumCleanerModel;
 
 /**
  * @author Rodrigo Andrade
  */
 public final class EastSensorUI extends SensorUI {
 
-    private VacuumCleaner vacuumCleaner;
 
-    public EastSensorUI(int posX, int posY, int width, int height, String label, VacuumCleaner vacuumCleaner, boolean isDebugMode) {
+    private VacuumCleanerModel vacuumCleanerModel;
+
+    public EastSensorUI(int posX, int posY, int width, int height, String label, VacuumCleanerModel vacuumCleanerModel, boolean isDebugMode) {
         super(posX, posY, width, height, label, isDebugMode);
-        this.vacuumCleaner = vacuumCleaner;
+        this.vacuumCleanerModel = vacuumCleanerModel;
     }
 
     @Override
     public synchronized boolean doAnimation() {
-        return vacuumCleaner.hasCollided() && vacuumCleaner.collidedDirection() == VacuumCleaner.DIRECTION_RIGHT;
+        return vacuumCleanerModel.hasCollision() && vacuumCleanerModel.collidedDirection() == VacuumCleanerRenderEntity.DIRECTION_UPPER;
     }
 }

@@ -1,6 +1,7 @@
 package com.github.rod1andrade.ui.infos;
 
-import com.github.rod1andrade.objects.VacuumCleaner;
+import com.github.rod1andrade.entities.VacuumCleanerRenderEntity;
+import com.github.rod1andrade.model.VacuumCleanerModel;
 import com.github.rod1andrade.ui.sensors.*;
 import com.github.rod1andrade.util.Config;
 
@@ -31,14 +32,14 @@ public class Hud {
     /**
      * Define a entidade na qual o HUD eh responsavel.
      *
-     * @param vacuumCleaner VacuumCleaner.
+     * @param vacuumCleanerRenderEntity VacuumCleaner.
      */
-    public void setHudVacuumCleanerInfo(VacuumCleaner vacuumCleaner) {
-        DirectionBoxUI.setVacuumCleaner(vacuumCleaner);
-        sensors[0] = new NorthSensorUI(width - 128, (posY + (height - 64) / 2), 16, 16, "North", vacuumCleaner, config.isDebugMode());
-        sensors[1] = new SouthSensorUI(width - (128 + 64), (posY + (height - 64) / 2), 16, 16, "South", vacuumCleaner, config.isDebugMode());
-        sensors[2] = new WestSensorUI(width - (128 + 64 + 64), (posY + (height - 64) / 2), 16, 16, "West", vacuumCleaner, config.isDebugMode());
-        sensors[3] = new EastSensorUI(width - (128 + 64 + 64 + 64), (posY + (height - 64) / 2), 16, 16, "East", vacuumCleaner, config.isDebugMode());
+    public void setHudVacuumCleanerInfo(VacuumCleanerModel vacuumCleanerModel) {
+        DirectionBoxUI.setVacuumCleaner(vacuumCleanerModel);
+        sensors[0] = new NorthSensorUI(width - 128, (posY + (height - 64) / 2), 16, 16, "North", vacuumCleanerModel, config.isDebugMode());
+        sensors[1] = new SouthSensorUI(width - (128 + 64), (posY + (height - 64) / 2), 16, 16, "South", vacuumCleanerModel, config.isDebugMode());
+        sensors[2] = new WestSensorUI(width - (128 + 64 + 64), (posY + (height - 64) / 2), 16, 16, "West", vacuumCleanerModel, config.isDebugMode());
+        sensors[3] = new EastSensorUI(width - (128 + 64 + 64 + 64), (posY + (height - 64) / 2), 16, 16, "East", vacuumCleanerModel, config.isDebugMode());
     }
 
     public void render(Graphics graphics) {

@@ -1,8 +1,9 @@
 package com.github.rod1andrade.ui.infos;
 
 import com.github.rod1andrade.assets.Sprite;
-import com.github.rod1andrade.objects.Entity;
-import com.github.rod1andrade.objects.VacuumCleaner;
+import com.github.rod1andrade.entities.RenderEntity;
+import com.github.rod1andrade.entities.VacuumCleanerRenderEntity;
+import com.github.rod1andrade.model.VacuumCleanerModel;
 import com.github.rod1andrade.util.Loader;
 
 import java.awt.*;
@@ -10,10 +11,10 @@ import java.awt.*;
 /**
  * @author Rodrigo Andrade
  */
-public class DirectionBoxUI extends Entity {
+public class DirectionBoxUI extends RenderEntity {
 
     private static Sprite directionHudSprite = new Sprite(84, 95, 41, 32, Loader.spriteSheet001);
-    private VacuumCleaner vacuumCleaner;
+    private VacuumCleanerModel vacuumCleanerModel;
     private int arrowDirection = 1;
 
     private Sprite[] arrowDirections = {
@@ -27,13 +28,13 @@ public class DirectionBoxUI extends Entity {
         super(posX, posY, width, height, directionHudSprite, null, false);
     }
 
-    public void setVacuumCleaner(VacuumCleaner vacuumCleaner) {
-        this.vacuumCleaner = vacuumCleaner;
-        arrowDirection = vacuumCleaner.getActualDirection();
+    public void setVacuumCleaner(VacuumCleanerModel vacuumCleanerModel) {
+        this.vacuumCleanerModel = vacuumCleanerModel;
+        arrowDirection = vacuumCleanerModel.getDirection();
     }
 
     public void update(float deltaTime) {
-        arrowDirection = vacuumCleaner.getActualDirection();
+        arrowDirection = vacuumCleanerModel.getDirection();
     }
 
     public void render(Graphics graphics) {

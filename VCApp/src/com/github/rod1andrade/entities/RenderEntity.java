@@ -1,4 +1,4 @@
-package com.github.rod1andrade.objects;
+package com.github.rod1andrade.entities;
 
 import com.github.rod1andrade.assets.Sprite;
 import com.github.rod1andrade.physics.BoxCollision;
@@ -9,7 +9,7 @@ import java.awt.*;
 /**
  * @author Rodrigo Andrade
  */
-public abstract class Entity {
+public abstract class RenderEntity {
 
     protected static byte SCALE_FACTOR = 4;
 
@@ -24,10 +24,10 @@ public abstract class Entity {
 
     protected boolean isDebugMode;
 
-    public Entity() {
+    public RenderEntity() {
     }
 
-    public Entity(int posX, int posY, int width, int height, Sprite sprite, BoxCollision boxCollision, boolean isDebugMode) {
+    public RenderEntity(int posX, int posY, int width, int height, Sprite sprite, BoxCollision boxCollision, boolean isDebugMode) {
         this.posX = posX;
         this.posY = posY;
         this.width = width * SCALE_FACTOR;
@@ -86,8 +86,28 @@ public abstract class Entity {
         return boxCollision != null;
     }
 
+    public int getPosX() {
+        return posX;
+    }
+
+    public int getPosY() {
+        return posY;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
     @Override
     public String toString() {
         return "0";
+    }
+
+    public BoxCollision getBoxCollision() {
+        return boxCollision;
     }
 }

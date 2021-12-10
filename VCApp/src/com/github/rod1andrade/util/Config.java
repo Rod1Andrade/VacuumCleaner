@@ -104,7 +104,7 @@ public class Config {
         amountRenderThrashType = AMOUNT_RENDER_THRASH_TYPE_RANDOM;
         vacuumCleanerVelocity = VACUUM_CLEANER_SPEED_2;
         sound = SOUND_OFF;
-        mode = MODE_NO_DEBUG;
+        mode = MODE_DEBUG;
     }
 
     public int getSimulationMode() {

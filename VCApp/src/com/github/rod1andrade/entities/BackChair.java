@@ -1,4 +1,4 @@
-package com.github.rod1andrade.objects;
+package com.github.rod1andrade.entities;
 
 import com.github.rod1andrade.assets.Sprite;
 import com.github.rod1andrade.physics.BoxCollision;
@@ -7,7 +7,7 @@ import com.github.rod1andrade.util.Loader;
 /**
  * @author Rodrigo Andrade
  */
-public final class BackChair extends Entity {
+public final class BackChair extends RenderEntity {
 
     private static final Sprite bChairSprite = new Sprite(97, 32, 14, 19, Loader.spriteSheet);
 
