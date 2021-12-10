@@ -1,4 +1,4 @@
-package com.github.rod1andrade.commands;
+package com.github.rod1andrade.commands.vacuumcleaner;
 
 import com.github.rod1andrade.entities.VacuumCleanerRenderEntity;
 import com.github.rod1andrade.model.VacuumCleanerModel;
@@ -6,8 +6,8 @@ import com.github.rod1andrade.model.VacuumCleanerModel;
 /**
  * @author Rodrigo Andrade
  */
-public class MakeMovementCommand extends VacuumCleanerCommand {
-    public MakeMovementCommand(VacuumCleanerModel vacuumCleanerModel, VacuumCleanerRenderEntity vacuumCleanerRenderEntity) {
+public class MakeMovementVacuumCleanerCommand extends VacuumCleanerCommand {
+    public MakeMovementVacuumCleanerCommand(VacuumCleanerModel vacuumCleanerModel, VacuumCleanerRenderEntity vacuumCleanerRenderEntity) {
         super(vacuumCleanerModel, vacuumCleanerRenderEntity);
     }
 

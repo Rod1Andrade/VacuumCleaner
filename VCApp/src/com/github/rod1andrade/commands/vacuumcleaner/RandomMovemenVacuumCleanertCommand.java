@@ -1,4 +1,4 @@
-package com.github.rod1andrade.commands;
+package com.github.rod1andrade.commands.vacuumcleaner;
 
 import com.github.rod1andrade.entities.VacuumCleanerRenderEntity;
 import com.github.rod1andrade.model.VacuumCleanerModel;
@@ -8,11 +8,11 @@ import java.util.Random;
 /**
  * @author Rodrigo Andrade
  */
-public class RandomMovementCommand extends VacuumCleanerCommand {
+public class RandomMovemenVacuumCleanertCommand extends VacuumCleanerCommand {
 
     private Random random;
 
-    public RandomMovementCommand(
+    public RandomMovemenVacuumCleanertCommand(
             VacuumCleanerModel vacuumCleanerModel, VacuumCleanerRenderEntity vacuumCleanerRenderEntity
     ) {
         super(vacuumCleanerModel, vacuumCleanerRenderEntity);

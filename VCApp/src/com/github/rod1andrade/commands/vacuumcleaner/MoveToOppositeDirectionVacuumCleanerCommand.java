@@ -1,4 +1,4 @@
-package com.github.rod1andrade.commands;
+package com.github.rod1andrade.commands.vacuumcleaner;
 
 import com.github.rod1andrade.entities.VacuumCleanerRenderEntity;
 import com.github.rod1andrade.model.VacuumCleanerModel;
@@ -6,12 +6,12 @@ import com.github.rod1andrade.model.VacuumCleanerModel;
 /**
  * @author Rodrigo Andrade
  */
-public class MoveToOppositeDirectionCommand extends VacuumCleanerCommand {
+public class MoveToOppositeDirectionVacuumCleanerCommand extends VacuumCleanerCommand {
 
     private MoveToRightCommand moveToRightCommand;
     private MoveToLeftCommand moveToLeftCommand;
 
-    public MoveToOppositeDirectionCommand(VacuumCleanerModel vacuumCleanerModel, VacuumCleanerRenderEntity vacuumCleanerRenderEntity) {
+    public MoveToOppositeDirectionVacuumCleanerCommand(VacuumCleanerModel vacuumCleanerModel, VacuumCleanerRenderEntity vacuumCleanerRenderEntity) {
         super(vacuumCleanerModel, vacuumCleanerRenderEntity);
         moveToRightCommand = new MoveToRightCommand(vacuumCleanerModel, vacuumCleanerRenderEntity);
         moveToLeftCommand = new MoveToLeftCommand(vacuumCleanerModel, vacuumCleanerRenderEntity);

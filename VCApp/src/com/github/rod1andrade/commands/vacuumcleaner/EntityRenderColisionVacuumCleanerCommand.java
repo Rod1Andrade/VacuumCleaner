@@ -1,13 +1,13 @@
-package com.github.rod1andrade.commands;
+package com.github.rod1andrade.commands.vacuumcleaner;
 
 import com.github.rod1andrade.entities.RenderEntity;
 import com.github.rod1andrade.entities.VacuumCleanerRenderEntity;
 import com.github.rod1andrade.model.VacuumCleanerModel;
 
-public class EntityRenderColisionCommand extends VacuumCleanerCommand{
+public class EntityRenderColisionVacuumCleanerCommand extends VacuumCleanerCommand {
     private RenderEntity[] renderEntities;
 
-    public EntityRenderColisionCommand(
+    public EntityRenderColisionVacuumCleanerCommand(
             VacuumCleanerModel vacuumCleanerModel, VacuumCleanerRenderEntity vacuumCleanerRenderEntity,
             RenderEntity[] renderEntities
     ) {

@@ -1,4 +1,4 @@
-package com.github.rod1andrade.commands;
+package com.github.rod1andrade.commands.vacuumcleaner;
 
 import com.github.rod1andrade.entities.VacuumCleanerRenderEntity;
 import com.github.rod1andrade.model.VacuumCleanerModel;
@@ -6,14 +6,14 @@ import com.github.rod1andrade.model.VacuumCleanerModel;
 /**
  * @author Rodrigo Andrade
  */
-public class BoundsCollisionCommand extends VacuumCleanerCommand {
+public class BoundsCollisionVacuumCleanerCommand extends VacuumCleanerCommand {
 
     private final int xMin;
     private final int yMin;
     private final int xBound;
     private final int yBound;
 
-    public BoundsCollisionCommand(
+    public BoundsCollisionVacuumCleanerCommand(
             VacuumCleanerModel vacuumCleanerModel,
             VacuumCleanerRenderEntity vacuumCleanerRenderEntity,
             int xMin, int yMin,

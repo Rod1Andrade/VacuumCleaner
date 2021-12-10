@@ -3,10 +3,7 @@ package com.github.rod1andrade.entities;
 import com.github.rod1andrade.assets.Sprite;
 import com.github.rod1andrade.audio.AudioPlayer;
 import com.github.rod1andrade.physics.BoxCollision;
-import com.github.rod1andrade.util.Config;
 import com.github.rod1andrade.util.Loader;
-
-import java.util.Random;
 
 /**
  * @author Rodrigo Andrade
@@ -27,15 +24,12 @@ public class VacuumCleanerRenderEntity extends RenderEntity {
     private int actualDirection = DIRECTION_RIGHT;
 
     // Sprites de cada direcao
-    private final Sprite[] sprites = {new Sprite(80, 48, 16, 16, Loader.spriteSheet001),
-            new Sprite(80, 32, 16, 16, Loader.spriteSheet001), new Sprite(96, 48, 16, 16, Loader.spriteSheet001),
-            new Sprite(96, 32, 16, 16, Loader.spriteSheet001),};
-
-    // Entidades de colisao
-    private RenderEntity[] entities;
-
-    // Classe Random (gerar valores aleatorios)
-    private Random random = new Random();
+    private final Sprite[] sprites = {
+            new Sprite(80, 48, 16, 16, Loader.spriteSheet001),
+            new Sprite(80, 32, 16, 16, Loader.spriteSheet001),
+            new Sprite(96, 48, 16, 16, Loader.spriteSheet001),
+            new Sprite(96, 32, 16, 16, Loader.spriteSheet001)
+    };
 
     private AudioPlayer movimentfx;
 

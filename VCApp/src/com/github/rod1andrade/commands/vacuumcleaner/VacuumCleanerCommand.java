@@ -1,12 +1,13 @@
-package com.github.rod1andrade.commands;
+package com.github.rod1andrade.commands.vacuumcleaner;
 
+import com.github.rod1andrade.commands.Command;
 import com.github.rod1andrade.entities.VacuumCleanerRenderEntity;
 import com.github.rod1andrade.model.VacuumCleanerModel;
 
 /**
  * @author Rorigo Andrade
  */
-public abstract class VacuumCleanerCommand {
+public abstract class VacuumCleanerCommand implements Command {
 
     protected VacuumCleanerModel vacuumCleanerModel;
     protected VacuumCleanerRenderEntity vacuumCleanerRenderEntity;
@@ -15,6 +16,4 @@ public abstract class VacuumCleanerCommand {
         this.vacuumCleanerModel = vacuumCleanerModel;
         this.vacuumCleanerRenderEntity = vacuumCleanerRenderEntity;
     }
-
-    public abstract void execute();
 }

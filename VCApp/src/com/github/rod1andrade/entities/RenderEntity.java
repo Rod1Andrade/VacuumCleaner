@@ -22,6 +22,7 @@ public abstract class RenderEntity {
     protected Sprite sprite;
     protected BoxCollision boxCollision;
 
+    protected boolean isVisible;
     protected boolean isDebugMode;
 
     public RenderEntity() {
@@ -33,6 +34,7 @@ public abstract class RenderEntity {
         this.width = width * SCALE_FACTOR;
         this.height = height * SCALE_FACTOR;
         this.sprite = sprite;
+        this.isVisible = true;
         this.isDebugMode = isDebugMode;
 
         setBoxCollision(boxCollision);
@@ -46,7 +48,8 @@ public abstract class RenderEntity {
         }
     }
 
-    public void initResources() {}
+    public void initResources() {
+    }
 
     public abstract void update(float deltaTime);
 
@@ -102,12 +105,24 @@ public abstract class RenderEntity {
         return height;
     }
 
-    @Override
-    public String toString() {
-        return "0";
+    public static byte getScaleFactor() {
+        return SCALE_FACTOR;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public void setVisible(boolean visible) {
+        isVisible = visible;
     }
 
     public BoxCollision getBoxCollision() {
         return boxCollision;
+    }
+
+    @Override
+    public String toString() {
+        return "0";
     }
 }
