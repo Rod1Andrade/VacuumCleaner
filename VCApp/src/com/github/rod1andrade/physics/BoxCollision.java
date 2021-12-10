@@ -1,5 +1,6 @@
 package com.github.rod1andrade.physics;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -37,6 +38,12 @@ public class BoxCollision {
         return r1.intersects(r2);
     }
 
+    public boolean hasOverlap(BoxCollision boxCollision) {
+        Rectangle r1 = new Rectangle(this.x, this.y, this.width, this.height);
+        Rectangle r2 = new Rectangle(boxCollision.x, boxCollision.y, boxCollision.width, boxCollision.height);
+        return r1.contains(r2);
+    }
+
     public void setValues(int x, int y) {
         this.x = x;
         this.y = y;
@@ -72,5 +79,16 @@ public class BoxCollision {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public void setDeScalation(int i) {
+        int xMin = getX() + i;
+        int yMin = getY() +  i;
+        int width = getWidth() - i * 2;
+        int height = getHeight()  - i * 2;
+
+        setValues(xMin, yMin);
+        setWidth(width);
+        setHeight(height);
     }
 }

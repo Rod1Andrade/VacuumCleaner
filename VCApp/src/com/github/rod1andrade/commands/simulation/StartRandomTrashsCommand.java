@@ -39,7 +39,7 @@ public class StartRandomTrashsCommand extends SimulationCommand {
             int posY = random.nextInt(yMin + 64, yBound - 64);
 
             TrashModel trashModel = new TrashModel(quantityPositionad, posX, posY, false);
-            TrashRenderEntity trashRenderEntity = new TrashRenderEntity(posX, posY, 16, 16, Config.getInstance().isDebugMode());
+            TrashRenderEntity trashRenderEntity = new TrashRenderEntity(posX, posY, 8, 8, Config.getInstance().isDebugMode());
 
             // Se esta colidindo com alguma entidade renderizada ja posicionada
             for (RenderEntity renderEntitiesPositined : renderEntitiesPositineds) {
@@ -58,6 +58,9 @@ public class StartRandomTrashsCommand extends SimulationCommand {
             }
 
             if (flag) continue;
+
+            // Ajustando box colision
+            trashRenderEntity.getBoxCollision().setDeScalation(4);
 
             trashModels.add(trashModel);
             trashRenderEntities.add(trashRenderEntity);

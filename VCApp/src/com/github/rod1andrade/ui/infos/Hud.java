@@ -1,9 +1,10 @@
 package com.github.rod1andrade.ui.infos;
 
-import com.github.rod1andrade.entities.VacuumCleanerRenderEntity;
 import com.github.rod1andrade.model.VacuumCleanerModel;
+import com.github.rod1andrade.render.ManagerRender;
 import com.github.rod1andrade.ui.sensors.*;
 import com.github.rod1andrade.util.Config;
+import com.github.rod1andrade.util.Timer;
 
 import java.awt.*;
 
@@ -14,7 +15,7 @@ public class Hud {
     private final int width;
     private final int height;
 
-    private final DirectionBoxUI DirectionBoxUI;
+    private final DirectionBoxUI directionBoxUI;
     private final SensorUI[] sensors = new SensorUI[4];
 
     private final Config config;
@@ -26,16 +27,16 @@ public class Hud {
         this.height = height;
         this.config = config;
 
-        DirectionBoxUI = new DirectionBoxUI(posX, posY, 41, 32);
+        directionBoxUI = new DirectionBoxUI(posX, posY, 41, 32);
     }
 
     /**
      * Define a entidade na qual o HUD eh responsavel.
      *
-     * @param vacuumCleanerRenderEntity VacuumCleaner.
+     * @param vacuumCleanerModel VacuumCleanerModel.
      */
     public void setHudVacuumCleanerInfo(VacuumCleanerModel vacuumCleanerModel) {
-        DirectionBoxUI.setVacuumCleaner(vacuumCleanerModel);
+        directionBoxUI.setVacuumCleaner(vacuumCleanerModel);
         sensors[0] = new NorthSensorUI(width - 128, (posY + (height - 64) / 2), 16, 16, "North", vacuumCleanerModel, config.isDebugMode());
         sensors[1] = new SouthSensorUI(width - (128 + 64), (posY + (height - 64) / 2), 16, 16, "South", vacuumCleanerModel, config.isDebugMode());
         sensors[2] = new WestSensorUI(width - (128 + 64 + 64), (posY + (height - 64) / 2), 16, 16, "West", vacuumCleanerModel, config.isDebugMode());
@@ -45,12 +46,24 @@ public class Hud {
     public void render(Graphics graphics) {
         graphics.setColor(Color.BLACK);
         graphics.fillRect(posX, posY, width, height);
-        DirectionBoxUI.render(graphics);
+        directionBoxUI.render(graphics);
         for (int i = 0; i < sensors.length; i++) sensors[i].render(graphics);
+
+        if(Config.getInstance().isDebugMode()) {
+            graphics.drawString(
+                    "FPS/UPS: " + ManagerRender.fps + "/" + ManagerRender.ups,
+                    directionBoxUI.getWidth(), directionBoxUI.getPosY() + 50
+            );
+        }
+
+        graphics.drawString(
+                Timer.getInstance().elapseTimeFomartToMinutes(),
+                directionBoxUI.getWidth() + 10, directionBoxUI.getPosY() + 80
+        );
     }
 
     public void update(float deltaTime) {
-        DirectionBoxUI.update(deltaTime);
+        directionBoxUI.update(deltaTime);
         for (int i = 0; i < sensors.length; i++) {
             sensors[i].update(deltaTime);
         }
@@ -73,6 +86,6 @@ public class Hud {
     }
 
     public DirectionBoxUI getHudVacuumCleanerInfo() {
-        return DirectionBoxUI;
+        return directionBoxUI;
     }
 }

@@ -11,7 +11,7 @@ import java.awt.*;
  */
 public abstract class RenderEntity {
 
-    protected static byte SCALE_FACTOR = 4;
+    protected byte SCALE_FACTOR = 4;
 
     protected int posX;
     protected int posY;
@@ -63,6 +63,9 @@ public abstract class RenderEntity {
      * @param graphics Graphics
      */
     public void render(Graphics graphics) {
+
+        graphics.drawImage(sprite.getSprite(SCALE_FACTOR), posX, posY, null);
+
         if (isCollisible() && isDebugMode) {
             String position = "(" + boxCollision.getX() + ", " + boxCollision.getY() + ")";
 
@@ -76,8 +79,6 @@ public abstract class RenderEntity {
             graphics.setColor(Color.GREEN);
             graphics.drawRect(boxCollision.getX(), boxCollision.getY(), boxCollision.getWidth(), boxCollision.getHeight());
         }
-
-        graphics.drawImage(sprite.getSprite(SCALE_FACTOR), posX, posY, null);
     }
 
     /**
@@ -105,7 +106,7 @@ public abstract class RenderEntity {
         return height;
     }
 
-    public static byte getScaleFactor() {
+    public byte getScaleFactor() {
         return SCALE_FACTOR;
     }
 

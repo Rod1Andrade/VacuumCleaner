@@ -26,12 +26,15 @@ public final class SimulationState extends State {
     private final VacuumCleanerRenderEntity vacuumCleanerRenderEntity;
     private final VacuumCleanerModel vacuumCleanerModel;
 
+    // Commands do aspirador de po
     private MakeMovementVacuumCleanerCommand makeMovementVacuumCleanerCommand;
     private RandomMovemenVacuumCleanertCommand randomMovemenVacuumCleanertCommand;
     private MoveToOppositeDirectionVacuumCleanerCommand moveToOppositeDirectionVacuumCleanerCommand;
     private BoundsCollisionVacuumCleanerCommand boundsCollisionVacuumCleanerCommand;
     private EntityRenderColisionVacuumCleanerCommand entityRenderColisionVacuumCleanerCommand;
+    private CollectTrashVacuumCleanerCommand collectTrashVacuumCleanerCommand;
 
+    // Commands da renderizacao
     private StartRandomTrashsCommand startRandomTrashsCommand;
 
     private final RenderEntity[] collidablesRenderEntities = new RenderEntity[6];
@@ -68,6 +71,11 @@ public final class SimulationState extends State {
                 Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT - hud.getHeight()
         );
 
+        collectTrashVacuumCleanerCommand = new CollectTrashVacuumCleanerCommand(
+                vacuumCleanerModel, vacuumCleanerRenderEntity,
+                startRandomTrashsCommand.getTrashModels(), startRandomTrashsCommand.getTrashRenderEntities()
+        );
+
         // Define a posicao de renderizacao das paredes
         for (int x = 0; x < Config.WINDOW_WIDTH; x += 64) {
             render.addEntityToRender(new StripedWall(x, 0, 16, 32));
@@ -97,8 +105,6 @@ public final class SimulationState extends State {
         render.addEntityToRender(collidablesRenderEntities[0]);
 //        renderEntity.addEntityToRender(new FrontChair(88 + 30, Config.WINDOW_HEIGHT / 2 + 66, 14, 19, config.isDebugMode()));
 
-        render.addEntityToRender(new TrashRenderEntity(88 + 128, Config.WINDOW_HEIGHT / 2, 16, 16, config.isDebugMode()));
-
         startRandomTrashsCommand.execute();
 
         for(TrashRenderEntity trashRenderEntity : startRandomTrashsCommand.getTrashRenderEntities()) {
@@ -121,6 +127,7 @@ public final class SimulationState extends State {
 
             entityRenderColisionVacuumCleanerCommand.execute();
             boundsCollisionVacuumCleanerCommand.execute();
+            collectTrashVacuumCleanerCommand.execute();
 
             makeMovementVacuumCleanerCommand.execute();
 
@@ -129,7 +136,7 @@ public final class SimulationState extends State {
                 deltaCollisionTime = 0;
             }
 
-            if (!vacuumCleanerModel.hasCollision() && System.currentTimeMillis() - countTimeToChangeDirection > RANDOM_MOVEMENT_COOLDOWN) {
+            if (System.currentTimeMillis() - countTimeToChangeDirection > RANDOM_MOVEMENT_COOLDOWN) {
                 randomMovemenVacuumCleanertCommand.execute();
                 countTimeToChangeDirection = System.currentTimeMillis();
             }
@@ -154,5 +161,8 @@ public final class SimulationState extends State {
             renderEntity.updateConfig(config);
         vacuumCleanerRenderEntity.updateConfig(config);
         vacuumCleanerModel.setVelocity(config.getVacuumCleanerVelocity());
+
+        for(TrashRenderEntity trashRenderEntity : startRandomTrashsCommand.getTrashRenderEntities())
+            trashRenderEntity.updateConfig(config);
     }
 }

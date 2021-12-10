@@ -35,7 +35,8 @@ public final class Render {
 
     public void render(Graphics graphics) {
         for (com.github.rod1andrade.entities.RenderEntity renderEntity : entities) {
-            renderEntity.render(graphics);
+            if(renderEntity.isVisible())
+                renderEntity.render(graphics);
         }
     }
 

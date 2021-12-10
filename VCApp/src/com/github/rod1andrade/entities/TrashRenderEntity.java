@@ -13,6 +13,11 @@ public class TrashRenderEntity extends RenderEntity {
 
     public TrashRenderEntity(int posX, int posY, int width, int height, boolean isDebugMode) {
         super(posX, posY, width, height, trashSprite, new BoxCollision(posX, posY, width, height), isDebugMode);
+
+        // Mudanca especificas para a renderizacao do lixo
+        SCALE_FACTOR = 2;
+        this.width = width * SCALE_FACTOR;
+        this.height = height * SCALE_FACTOR;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.github.rod1andrade.ui.sensors;
 
 import com.github.rod1andrade.assets.Sprite;
 import com.github.rod1andrade.entities.RenderEntity;
+import com.github.rod1andrade.util.Config;
 import com.github.rod1andrade.util.Loader;
 
 import java.awt.*;
@@ -80,8 +81,8 @@ public abstract class SensorUI extends RenderEntity {
         graphics.setColor(Color.WHITE);
         graphics.drawString(label, posX + font.getSize() + label.length() / 2, posY - font.getSize() / 2);
 
-        if(isDebugMode) {
-            graphics.drawString("" +doAnimation(), posX, (posY + height) + 10);
+        if(Config.getInstance().isDebugMode()) {
+            graphics.drawString("" + doAnimation(), posX, (posY + height) + 10);
         }
 
         graphics.drawImage(sprite.getSprite(SCALE_FACTOR), posX, posY, null);

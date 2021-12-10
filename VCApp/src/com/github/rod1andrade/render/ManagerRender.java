@@ -5,6 +5,7 @@ import com.github.rod1andrade.states.MenuState;
 import com.github.rod1andrade.states.SimulationState;
 import com.github.rod1andrade.states.State;
 import com.github.rod1andrade.util.Config;
+import com.github.rod1andrade.util.Timer;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -21,8 +22,8 @@ public final class ManagerRender extends Canvas implements Runnable {
 
     private KeyInput keyInput;
 
-    private int ups = 0;
-    private int fps = 0;
+    public static int ups = 0;
+    public static int fps = 0;
 
     private boolean isRunning;
     private Thread windowRenderThread;
@@ -158,10 +159,15 @@ public final class ManagerRender extends Canvas implements Runnable {
     @Override
     public void run() {
 
+        Timer.start();
+
         long millisBeforeTime = System.currentTimeMillis();
         long nsBeforeTime = System.nanoTime();
 
         double delta = 0;
+
+        int fpsCounter = 0;
+        int upsCounter = 0;
 
         while (isRunning) {
             boolean shouldRender = false;
@@ -175,7 +181,7 @@ public final class ManagerRender extends Canvas implements Runnable {
 
             while (delta >= 1) {
                 update((float) delta);
-                ups++;
+                upsCounter++;
                 delta--;
                 shouldRender = true;
             }
@@ -184,14 +190,18 @@ public final class ManagerRender extends Canvas implements Runnable {
 
             if (shouldRender) {
                 render();
-                fps++;
+                fpsCounter++;
             }
 
             if (System.currentTimeMillis() - millisBeforeTime > 1000) {
                 millisBeforeTime += 1000;
-                ups = 0;
-                fps = 0;
+                ups = upsCounter;
+                fps = fpsCounter;
+                fpsCounter = 0;
+                upsCounter = 0;
             }
+
+            Timer.updateCurrentTime();
         }
     }
 }

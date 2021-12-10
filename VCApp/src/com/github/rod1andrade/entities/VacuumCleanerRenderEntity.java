@@ -31,7 +31,7 @@ public class VacuumCleanerRenderEntity extends RenderEntity {
             new Sprite(96, 32, 16, 16, Loader.spriteSheet001)
     };
 
-    private AudioPlayer movimentfx;
+    private AudioPlayer collisionEffect;
 
     public VacuumCleanerRenderEntity(int posX, int posY, int width, int height, boolean isDebugMode) {
         this.posX = posX;
@@ -41,6 +41,7 @@ public class VacuumCleanerRenderEntity extends RenderEntity {
 
         this.sprite = sprites[actualDirection];
         this.isDebugMode = isDebugMode;
+        this.isVisible = true;
 
         setBoxCollision(new BoxCollision(posX, posY, width, height));
     }
@@ -48,7 +49,7 @@ public class VacuumCleanerRenderEntity extends RenderEntity {
     @Override
     public void initResources() {
         super.initResources();
-        movimentfx = new AudioPlayer("assets/audios/mixkit-small-hit-in-a-game-2072.wav");
+        collisionEffect = new AudioPlayer("assets/audios/mixkit-small-hit-in-a-game-2072.wav");
     }
 
     @Override

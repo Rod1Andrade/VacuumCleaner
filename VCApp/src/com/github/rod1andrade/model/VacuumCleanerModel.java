@@ -1,5 +1,8 @@
 package com.github.rod1andrade.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Rodrigo Andrade
  */
@@ -8,6 +11,7 @@ public class VacuumCleanerModel {
     private int direction;
     private int collisionDirection;
     private boolean hasCollision;
+    private List<TrashModel> collectedsTrashs = new ArrayList<>();
 
     public VacuumCleanerModel() {
     }
@@ -17,6 +21,18 @@ public class VacuumCleanerModel {
         this.direction = direction;
         this.hasCollision = hasCollision;
         collisionDirection = -1;
+    }
+
+    public void collect(TrashModel trashModel) {
+        collectedsTrashs.add(trashModel);
+    }
+
+    public List<TrashModel> getCollectedsTrashs() {
+        return List.copyOf(collectedsTrashs);
+    }
+
+    public int quantityCollected() {
+        return collectedsTrashs.size();
     }
 
     public int getVelocity() {
