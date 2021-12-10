@@ -3,8 +3,8 @@ package com.github.rod1andrade.commands.vacuumcleaner;
 import com.github.rod1andrade.commands.trash.CollectedTrashCommand;
 import com.github.rod1andrade.entities.TrashRenderEntity;
 import com.github.rod1andrade.entities.VacuumCleanerRenderEntity;
-import com.github.rod1andrade.model.TrashModel;
-import com.github.rod1andrade.model.VacuumCleanerModel;
+import com.github.rod1andrade.models.TrashModel;
+import com.github.rod1andrade.models.VacuumCleanerModel;
 
 import java.util.List;
 

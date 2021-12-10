@@ -1,4 +1,4 @@
-package com.github.rod1andrade.model;
+package com.github.rod1andrade.models;
 
 /**
  * @author Rodrigo Andrade

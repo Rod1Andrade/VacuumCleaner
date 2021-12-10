@@ -2,8 +2,7 @@ package com.github.rod1andrade.ui.infos;
 
 import com.github.rod1andrade.assets.Sprite;
 import com.github.rod1andrade.entities.RenderEntity;
-import com.github.rod1andrade.entities.VacuumCleanerRenderEntity;
-import com.github.rod1andrade.model.VacuumCleanerModel;
+import com.github.rod1andrade.models.VacuumCleanerModel;
 import com.github.rod1andrade.util.Loader;
 
 import java.awt.*;

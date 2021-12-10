@@ -3,7 +3,7 @@ package com.github.rod1andrade.states;
 import com.github.rod1andrade.inputs.KeyInput;
 import com.github.rod1andrade.ui.menu.SingleMenuData;
 import com.github.rod1andrade.ui.menu.MenuOption;
-import com.github.rod1andrade.util.Config;
+import com.github.rod1andrade.util.GlobalConfig;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -15,9 +15,9 @@ import java.io.IOException;
  */
 public class MenuState extends State {
 
-    private final int space = (int) (Config.WINDOW_WIDTH * 0.10);
-    private final int width = Config.WINDOW_WIDTH - space;
-    private final int height = Config.WINDOW_HEIGHT - space;
+    private final int space = (int) (GlobalConfig.WINDOW_WIDTH * 0.10);
+    private final int width = GlobalConfig.WINDOW_WIDTH - space;
+    private final int height = GlobalConfig.WINDOW_HEIGHT - space;
 
     private final int xStart = space / 2;
     private final int yStart = space / 2;
@@ -31,48 +31,46 @@ public class MenuState extends State {
     private Font optionMenuFont;
 
     private int menuLabelSelected = 0;
-    private SingleMenuData simulationMode = new SingleMenuData("Mode", config.getSimulationMode(),
-            new MenuOption("Infinity", 1, Config.SIMULATION_MODE_INFINITY),
-            new MenuOption("Until Clean", 2, Config.SIMULATION_MODE_UNTIL_CLEAN),
-            new MenuOption("Time", 3, Config.SIMULATION_MODE_TIME)
+    private SingleMenuData simulationMode = new SingleMenuData("Mode", globalConfig.getSimulationMode(),
+            new MenuOption("Until Clean", 2, GlobalConfig.SIMULATION_MODE_UNTIL_CLEAN),
+            new MenuOption("Time", 3, GlobalConfig.SIMULATION_MODE_TIME)
     );
 
-    private SingleMenuData time = new SingleMenuData("Time", config.getTimeLimit(),
-            new MenuOption("No Time", 1, Config.TIME_MODE_NO_TIME),
-            new MenuOption("1 min", 2, Config.TIME_MODE_MILLIS_MINUTES_1),
-            new MenuOption("2 min", 3, Config.TIME_MODE_MILLIS_MINUTES_2),
-            new MenuOption("3 min", 4, Config.TIME_MODE_MILLIS_MINUTES_3),
-            new MenuOption("4 min", 5, Config.TIME_MODE_MILLIS_MINUTES_4),
-            new MenuOption("5 min", 6, Config.TIME_MODE_MILLIS_MINUTES_5)
+    private SingleMenuData time = new SingleMenuData("Time", globalConfig.getTimeLimit(),
+            new MenuOption("No Time", 1, GlobalConfig.TIME_MODE_NO_TIME),
+            new MenuOption("1 min", 2, GlobalConfig.TIME_MODE_MILLIS_MINUTES_1),
+            new MenuOption("2 min", 3, GlobalConfig.TIME_MODE_MILLIS_MINUTES_2),
+            new MenuOption("3 min", 4, GlobalConfig.TIME_MODE_MILLIS_MINUTES_3),
+            new MenuOption("4 min", 5, GlobalConfig.TIME_MODE_MILLIS_MINUTES_4),
+            new MenuOption("5 min", 6, GlobalConfig.TIME_MODE_MILLIS_MINUTES_5)
     );
 
-    private SingleMenuData renderThrashType = new SingleMenuData("Render Thrash Type", config.getAmountRenderThrashType(),
-            new MenuOption("Infinity", 1, Config.AMOUNT_RENDER_THRASH_TYPE_INFINITY),
-            new MenuOption("Random", 2, Config.AMOUNT_RENDER_THRASH_TYPE_RANDOM)
+    private SingleMenuData renderThrashType = new SingleMenuData("Render Thrash Type", globalConfig.getAmountRenderThrashType(),
+            new MenuOption("Random", 2, GlobalConfig.AMOUNT_RENDER_THRASH_TYPE_RANDOM)
     );
 
-    private SingleMenuData vacuumCleanerVelocity = new SingleMenuData("Vacuum Cleaner Velocity", config.getVacuumCleanerVelocity(),
-            new MenuOption("2x", 1, Config.VACUUM_CLEANER_SPEED_2),
-            new MenuOption("4x", 2, Config.VACUUM_CLEANER_SPEED_4),
-            new MenuOption("6x", 3, Config.VACUUM_CLEANER_SPEED_6)
+    private SingleMenuData vacuumCleanerVelocity = new SingleMenuData("Vacuum Cleaner Velocity", globalConfig.getVacuumCleanerVelocity(),
+            new MenuOption("2x", 1, GlobalConfig.VACUUM_CLEANER_SPEED_2),
+            new MenuOption("4x", 2, GlobalConfig.VACUUM_CLEANER_SPEED_4),
+            new MenuOption("6x", 3, GlobalConfig.VACUUM_CLEANER_SPEED_6)
     );
 
-    private SingleMenuData debug = new SingleMenuData("Debug", config.getMode(),
-            new MenuOption("Yes", 1, Config.MODE_DEBUG),
-            new MenuOption("No", 2, Config.MODE_NO_DEBUG)
+    private SingleMenuData debug = new SingleMenuData("Debug", globalConfig.getMode(),
+            new MenuOption("Yes", 1, GlobalConfig.MODE_DEBUG),
+            new MenuOption("No", 2, GlobalConfig.MODE_NO_DEBUG)
     );
 
-    private SingleMenuData sound = new SingleMenuData("Sound", config.getSound(),
-            new MenuOption("On", 1, Config.SOUND_ON),
-            new MenuOption("Off", 2, Config.SOUND_OFF)
+    private SingleMenuData sound = new SingleMenuData("Sound", globalConfig.getSound(),
+            new MenuOption("On", 1, GlobalConfig.SOUND_ON),
+            new MenuOption("Off", 2, GlobalConfig.SOUND_OFF)
     );
 
     private SingleMenuData[] singleMenuData = {simulationMode, time, renderThrashType, vacuumCleanerVelocity, debug, sound};
 
     private KeyInput keyInput;
 
-    public MenuState(String name, int actualState, KeyInput keyInput, Config config) {
-        super(name, actualState, config);
+    public MenuState(String name, int actualState, KeyInput keyInput, GlobalConfig globalConfig) {
+        super(name, actualState, globalConfig);
         this.keyInput = keyInput;
     }
 
@@ -141,7 +139,7 @@ public class MenuState extends State {
 
         graphics.setFont(headerMenuFont);
         graphics.setColor(Color.WHITE);
-        graphics.drawString("Settings", xStart + (headerMenuFont.getSize() + 10), yStart + (headerMenuFont.getSize() * 2));
+        graphics.drawString(name, xStart + (headerMenuFont.getSize() + 10), yStart + (headerMenuFont.getSize() * 2));
 
         for (int i = 0; i < singleMenuData.length; i++) {
             if (i == menuLabelSelected)
@@ -160,11 +158,18 @@ public class MenuState extends State {
     @Override
     public void dispose() {
         super.dispose();
-        config.setSimulationMode(simulationMode.getSelectedMenuOption().getOptionCode());
-        config.setTimeLimit(time.getSelectedMenuOption().getOptionCode());
-        config.setAmountRenderThrashType(renderThrashType.getSelectedMenuOption().getOptionCode());
-        config.setVacuumCleanerVelocity(vacuumCleanerVelocity.getSelectedMenuOption().getOptionCode());
-        config.setMode(debug.getSelectedMenuOption().getOptionCode());
-        config.setSound(sound.getSelectedMenuOption().getOptionCode());
+        globalConfig.setSimulationMode(simulationMode.getSelectedMenuOption().getOptionCode());
+        globalConfig.setTimeLimit(time.getSelectedMenuOption().getOptionCode());
+        globalConfig.setAmountRenderThrashType(renderThrashType.getSelectedMenuOption().getOptionCode());
+        globalConfig.setVacuumCleanerVelocity(vacuumCleanerVelocity.getSelectedMenuOption().getOptionCode());
+        globalConfig.setMode(debug.getSelectedMenuOption().getOptionCode());
+        globalConfig.setSound(sound.getSelectedMenuOption().getOptionCode());
+
+        // caso especial
+        if(globalConfig.getSimulationMode() == GlobalConfig.SIMULATION_MODE_TIME && globalConfig.getTimeLimit() == GlobalConfig.TIME_MODE_NO_TIME) {
+            time.setOption(2);
+            globalConfig.setTimeLimit(GlobalConfig.TIME_MODE_MILLIS_MINUTES_1);
+        }
+
     }
 }

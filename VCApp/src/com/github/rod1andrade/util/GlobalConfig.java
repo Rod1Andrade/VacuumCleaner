@@ -5,7 +5,7 @@ package com.github.rod1andrade.util;
  *
  * @author Rodrigo Andrade
  */
-public class Config {
+public class GlobalConfig {
 
     /**
      * Configuracoes da janela Window
@@ -25,7 +25,8 @@ public class Config {
      */
     public static final int STATE_MENU = 0;
     public static final int STATE_SIMULATION = 1;
-    public static final int STATE_QUANTITY_STATE = 2;
+    public static final int STATE_RESUME_SIMULATION = 2;
+    public static final int STATE_QUANTITY_STATE = 3;
 
     /**
      * Modo de simulacao
@@ -81,15 +82,15 @@ public class Config {
     private int sound;
     private int mode;
 
-    private static Config instance;
+    private static GlobalConfig instance;
 
-    private Config() {
+    private GlobalConfig() {
         defaultConfig();
     }
 
-    public static Config getInstance() {
+    public static GlobalConfig getInstance() {
         if(instance == null) {
-            instance = new Config();
+            instance = new GlobalConfig();
         }
 
         return instance;
@@ -159,6 +160,10 @@ public class Config {
         return sound;
     }
 
+    public boolean hasSound() {
+        return instance.sound == SOUND_ON;
+    }
+
     @Override
     public String toString() {
         return "Config{" +
@@ -169,9 +174,5 @@ public class Config {
                 ", sound=" + sound +
                 ", mode=" + mode +
                 '}';
-    }
-
-    public boolean hasSound() {
-        return instance.sound == SOUND_ON;
     }
 }

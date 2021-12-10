@@ -1,6 +1,6 @@
 package com.github.rod1andrade.states;
 
-import com.github.rod1andrade.util.Config;
+import com.github.rod1andrade.util.GlobalConfig;
 
 import java.awt.*;
 
@@ -16,12 +16,12 @@ public abstract class State {
     protected String name;
     protected int actualState;
 
-    protected Config config;
+    protected GlobalConfig globalConfig;
 
-    public State(String name, int actualState, Config config) {
+    public State(String name, int actualState, GlobalConfig globalConfig) {
         this.name = name;
         this.actualState = actualState;
-        this.config = config;
+        this.globalConfig = globalConfig;
     }
 
     public abstract void initializeResources();

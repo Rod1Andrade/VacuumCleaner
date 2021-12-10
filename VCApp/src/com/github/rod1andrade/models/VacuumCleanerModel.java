@@ -1,4 +1,4 @@
-package com.github.rod1andrade.model;
+package com.github.rod1andrade.models;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ public class VacuumCleanerModel {
     private int direction;
     private int collisionDirection;
     private boolean hasCollision;
+    private int collisionCount;
     private List<TrashModel> collectedsTrashs = new ArrayList<>();
 
     public VacuumCleanerModel() {
@@ -56,13 +57,23 @@ public class VacuumCleanerModel {
     }
 
     public void setHasCollision(boolean hasCollision) {
-        if(hasCollision)
+        if(hasCollision) {
+            collisionCount++;
             collisionDirection = direction;
+        }
 
         this.hasCollision = hasCollision;
     }
 
     public int collidedDirection() {
         return  collisionDirection;
+    }
+
+    public int amountCollectedTrashs() {
+        return collectedsTrashs.size();
+    }
+
+    public int getAmountCollisions() {
+        return collisionCount;
     }
 }

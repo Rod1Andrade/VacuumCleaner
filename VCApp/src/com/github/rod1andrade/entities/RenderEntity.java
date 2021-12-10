@@ -2,7 +2,7 @@ package com.github.rod1andrade.entities;
 
 import com.github.rod1andrade.assets.Sprite;
 import com.github.rod1andrade.physics.BoxCollision;
-import com.github.rod1andrade.util.Config;
+import com.github.rod1andrade.util.GlobalConfig;
 
 import java.awt.*;
 
@@ -53,8 +53,8 @@ public abstract class RenderEntity {
 
     public abstract void update(float deltaTime);
 
-    public void updateConfig(Config config) {
-        this.isDebugMode = config.isDebugMode();
+    public void updateConfig(GlobalConfig globalConfig) {
+        this.isDebugMode = globalConfig.isDebugMode();
     }
 
     /**

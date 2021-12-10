@@ -3,8 +3,8 @@ package com.github.rod1andrade.commands.simulation;
 import com.github.rod1andrade.commands.trash.PositinateTrashCommand;
 import com.github.rod1andrade.entities.RenderEntity;
 import com.github.rod1andrade.entities.TrashRenderEntity;
-import com.github.rod1andrade.model.TrashModel;
-import com.github.rod1andrade.util.Config;
+import com.github.rod1andrade.models.TrashModel;
+import com.github.rod1andrade.util.GlobalConfig;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -39,7 +39,7 @@ public class StartRandomTrashsCommand extends SimulationCommand {
             int posY = random.nextInt(yMin + 64, yBound - 64);
 
             TrashModel trashModel = new TrashModel(quantityPositionad, posX, posY, false);
-            TrashRenderEntity trashRenderEntity = new TrashRenderEntity(posX, posY, 8, 8, Config.getInstance().isDebugMode());
+            TrashRenderEntity trashRenderEntity = new TrashRenderEntity(posX, posY, 8, 8, GlobalConfig.getInstance().isDebugMode());
 
             // Se esta colidindo com alguma entidade renderizada ja posicionada
             for (RenderEntity renderEntitiesPositined : renderEntitiesPositineds) {

@@ -42,4 +42,12 @@ public class SingleMenuData {
     public String getLabel() {
         return label;
     }
+
+    public void setOption(int id) {
+        for(MenuOption menuOption : menuOptions) {
+            if(menuOption.getId() == id) {
+                selectedOption = id - 1;
+            }
+        }
+    }
 }

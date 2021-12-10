@@ -1,10 +1,9 @@
-package com.github.rod1andrade.render;
+package com.github.rod1andrade.states;
 
+import com.github.rod1andrade.entities.VacuumCleanerRenderEntity;
 import com.github.rod1andrade.inputs.KeyInput;
-import com.github.rod1andrade.states.MenuState;
-import com.github.rod1andrade.states.SimulationState;
-import com.github.rod1andrade.states.State;
-import com.github.rod1andrade.util.Config;
+import com.github.rod1andrade.models.VacuumCleanerModel;
+import com.github.rod1andrade.util.GlobalConfig;
 import com.github.rod1andrade.util.Timer;
 
 import java.awt.*;
@@ -16,7 +15,7 @@ import java.awt.image.BufferedImage;
 /**
  * @author Rodrigo Andrade
  */
-public final class ManagerRender extends Canvas implements Runnable {
+public final class MainManagerState extends Canvas implements Runnable {
 
     private static final long serialVersionUID = 3060247783915240461L;
 
@@ -28,33 +27,38 @@ public final class ManagerRender extends Canvas implements Runnable {
     private boolean isRunning;
     private Thread windowRenderThread;
 
-    private final BufferedImage bufferedImage = new BufferedImage(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT, BufferedImage.TYPE_INT_RGB);
+    private final BufferedImage bufferedImage = new BufferedImage(GlobalConfig.WINDOW_WIDTH, GlobalConfig.WINDOW_HEIGHT, BufferedImage.TYPE_INT_RGB);
 
-    private int currentState = Config.STATE_SIMULATION;
-    private State[] states = new State[Config.STATE_QUANTITY_STATE];
+    private int currentState = GlobalConfig.STATE_SIMULATION;
+    private State[] states = new State[GlobalConfig.STATE_QUANTITY_STATE];
 
-    private Config config;
+    private  VacuumCleanerModel vacuumCleanerModel;
 
-    public ManagerRender(KeyInput keyInput) {
-        setMinimumSize(new Dimension(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT));
-        setMaximumSize(new Dimension(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT));
-        setPreferredSize(new Dimension(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT));
+    private GlobalConfig globalConfig;
+
+    public MainManagerState(KeyInput keyInput) {
+        setMinimumSize(new Dimension(GlobalConfig.WINDOW_WIDTH, GlobalConfig.WINDOW_HEIGHT));
+        setMaximumSize(new Dimension(GlobalConfig.WINDOW_WIDTH, GlobalConfig.WINDOW_HEIGHT));
+        setPreferredSize(new Dimension(GlobalConfig.WINDOW_WIDTH, GlobalConfig.WINDOW_HEIGHT));
         setFocusable(true);
 
         this.keyInput = keyInput;
-        config = Config.getInstance();
+        globalConfig = GlobalConfig.getInstance();
     }
 
     /**
      * Inicia recursos.
      */
     public synchronized void initResources() {
+
         addKeyListener(keyInput);
 
-        config.defaultConfig();
+        globalConfig.defaultConfig();
+        vacuumCleanerModel = new VacuumCleanerModel(globalConfig.getVacuumCleanerVelocity(), VacuumCleanerRenderEntity.DIRECTION_RIGHT, false);
 
-        states[Config.STATE_MENU] = new MenuState("Menu State", State.RUNNING, keyInput, config);
-        states[Config.STATE_SIMULATION] = new SimulationState("Simulation", State.RUNNING, config);
+        states[GlobalConfig.STATE_MENU] = new MenuState("Settings", State.STOP, keyInput, globalConfig);
+        states[GlobalConfig.STATE_SIMULATION] = new SimulationState("Simulation", State.RUNNING, globalConfig, vacuumCleanerModel);
+        states[GlobalConfig.STATE_RESUME_SIMULATION] = new ResumeSimulationState("Resume", State.STOP, globalConfig, vacuumCleanerModel);
 
         // Inicia os recurso de cada state
         for (State state : states)
@@ -87,11 +91,15 @@ public final class ManagerRender extends Canvas implements Runnable {
      */
     public synchronized void userInputs() {
         if (keyInput.hasPressed(KeyEvent.VK_ESCAPE)) {
-            changeState(Config.STATE_MENU);
+            changeState(GlobalConfig.STATE_MENU);
         }
 
         if (keyInput.hasPressed(KeyEvent.VK_S)) {
-            changeState(Config.STATE_SIMULATION);
+            changeState(GlobalConfig.STATE_SIMULATION);
+        }
+
+        if (keyInput.hasPressed(KeyEvent.VK_R)) {
+            changeState(GlobalConfig.STATE_RESUME_SIMULATION);
         }
     }
 
@@ -112,6 +120,29 @@ public final class ManagerRender extends Canvas implements Runnable {
      * de 60 updates por segundo para fazer acoes.
      */
     public void update(float deltaTime) {
+
+        // Regra de funcinalide para o modo de simulacao temporal
+        if(globalConfig.getSimulationMode() == GlobalConfig.SIMULATION_MODE_TIME) {
+            if(Timer.getElapsedTime() > globalConfig.getTimeLimit()) {
+                changeState(GlobalConfig.STATE_RESUME_SIMULATION);
+            }
+        }
+
+
+        // Regra de funcinalidade para o modo de simulacao ate limpar
+        if(globalConfig.getSimulationMode() == GlobalConfig.SIMULATION_MODE_UNTIL_CLEAN) {
+            if(vacuumCleanerModel.amountCollectedTrashs() == GlobalConfig.QUANTITY_THRASH_LIMIT) {
+                changeState(GlobalConfig.STATE_RESUME_SIMULATION);
+            }
+
+            // Regra para o modo de simulacao ate limpar + limite de tempo.
+            if(globalConfig.getTimeLimit() != 0) {
+                if(Timer.getElapsedTime() > globalConfig.getTimeLimit()) {
+                    changeState(GlobalConfig.STATE_RESUME_SIMULATION);
+                }
+            }
+        }
+
         states[currentState].update(deltaTime);
     }
 
@@ -122,7 +153,7 @@ public final class ManagerRender extends Canvas implements Runnable {
     public void render() {
         BufferStrategy bufferStrategy = getBufferStrategy();
         if (bufferStrategy == null) {
-            createBufferStrategy(Config.RENDER_BUFFER_STRATEGY);
+            createBufferStrategy(GlobalConfig.RENDER_BUFFER_STRATEGY);
             return;
         }
 
@@ -175,7 +206,7 @@ public final class ManagerRender extends Canvas implements Runnable {
             long difference = nsNowTime - nsBeforeTime;
 
             nsBeforeTime = nsNowTime;
-            delta += difference / Config.RENDER_NS_PER_60_UPS;
+            delta += difference / GlobalConfig.RENDER_NS_PER_60_UPS;
 
             userInputs();
 

@@ -2,7 +2,7 @@ package com.github.rod1andrade.commands.vacuumcleaner;
 
 import com.github.rod1andrade.commands.Command;
 import com.github.rod1andrade.entities.VacuumCleanerRenderEntity;
-import com.github.rod1andrade.model.VacuumCleanerModel;
+import com.github.rod1andrade.models.VacuumCleanerModel;
 
 /**
  * @author Rorigo Andrade
