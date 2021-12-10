@@ -97,6 +97,8 @@ public final class SimulationState extends State {
     @Override
     public void update(float deltaTime) {
         if (actualState == State.RUNNING) {
+            hud.update(deltaTime);
+
             vacuumCleanerModel.setHasCollision(false);
 
             entityRenderColisionCommand.execute();
@@ -114,7 +116,6 @@ public final class SimulationState extends State {
                 countTimeToChangeDirection = System.currentTimeMillis();
             }
 
-            hud.update(deltaTime);
             vacuumCleanerRenderEntity.update(deltaTime);
             deltaCollisionTime += deltaTime;
         }
@@ -133,6 +134,7 @@ public final class SimulationState extends State {
     public void dispose() {
         for (RenderEntity renderEntity : renderEntities)
             renderEntity.updateConfig(config);
-        vacuumCleanerRenderEntity.updateConfig(config);
+
+        vacuumCleanerModel.setVelocity(config.getVacuumCleanerVelocity());
     }
 }

@@ -61,12 +61,6 @@ public class VacuumCleanerRenderEntity extends RenderEntity {
     }
 
     @Override
-    public void updateConfig(Config config) {
-        super.updateConfig(config);
-        speed = config.getVacuumCleanerVelocity();
-    }
-
-    @Override
     public void update(float deltaTime) {
         if (hasChangedDirection()) {
             changeSpriteDirection();

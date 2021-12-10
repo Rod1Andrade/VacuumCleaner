@@ -18,6 +18,6 @@ public final class EastSensorUI extends SensorUI {
 
     @Override
     public synchronized boolean doAnimation() {
-        return vacuumCleanerModel.hasCollision() && vacuumCleanerModel.collidedDirection() == VacuumCleanerRenderEntity.DIRECTION_UPPER;
+        return vacuumCleanerModel.hasCollision() && vacuumCleanerModel.collidedDirection() == VacuumCleanerRenderEntity.DIRECTION_RIGHT;
     }
 }
