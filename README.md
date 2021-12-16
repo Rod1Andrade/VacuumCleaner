@@ -6,6 +6,8 @@
 Aplicação desenvolvida para a disciplina de programação 2 do curso de sistema de informação da Universidade Estadual de Goiás.
 ***Objetivo**: Moldar um programa orientado a objetos com interface gráfica.*
 
+Como foi feito? https://www.youtube.com/watch?v=I4zUZrm6-EI&ab_channel=CatSoftware
+
 ## User Stories
 
 - [x] Usuario deve assistir uma simulação de um aspirador de pó limpando uma sala.
